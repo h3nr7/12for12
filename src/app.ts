@@ -1,26 +1,57 @@
 /** Required modules */
-import express from 'express';
 import * as dotenv from 'dotenv';
-import cors from "cors";
-import helmet from "helmet";
-
-import { usersRouter } from "./model/users/users.router";
 
 if(process.env.NODE_ENV !== 'production') {
 	dotenv.config();
 }
 
+import express from 'express';
+import session from 'express-session';
+import compression from 'compression';
+import MemoryStore from "memorystore";
+import bodyParser from 'body-parser';
+import passport from 'passport';
+import cors from "cors";
+import helmet from "helmet";
+
+import { usersRouter } from "./controller/users/users.router";
+import { eventsRouter } from './controller/events/events.router';
+import { errorHandler } from './middleware/error.middleware';
+import { notFoundHandler } from './middleware/notFound.middleware';
+
+import * as passportConfig from './config/passport';
+
 /**  App variables */
 const PORT: number = parseInt(process.env.PORT as string, 10);
-
+const SESSION_SECRET: string = process.env.SESSION_SECRET;
+const MemStore = MemoryStore(session);
 /** App config */
 const app = express();
 
+app.use(compression());
 app.use(helmet());
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({
+	resave: true,
+	saveUninitialized: true,
+	secret: SESSION_SECRET,
+	store: new MemStore({
+		checkPeriod: 86400000
+	})
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
+
+
+/** App routing */
 app.use("/users", usersRouter);
+// app.use("/events", eventsRouter);
+
+app.use(errorHandler);
+app.use(notFoundHandler);
 
 /** Server activation */
 app.get('/', (req, res) => {

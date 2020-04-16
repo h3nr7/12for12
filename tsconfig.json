@@ -7,13 +7,15 @@
 		"removeComments": true,
 		"preserveConstEnums": true,
 		"sourceMap": true,
-		"outDir": "./dist"
+		"outDir": "./dist",
+		"typeRoots": ["./types", "node_mdules/@types"]
 	},
 	"include": [
 		"src/**/*"
 	],
 	"exclude": [
 		"node_modules",
+		"types",
 		"**/*.spec.ts"
 	]
 	
