@@ -17,6 +17,8 @@ const renderFullPage = () => {
                 <meta charset="utf-8">
                 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+                <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+                <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
                 <title>My App</title>
                 <body>
                     <script src='${isProdMode ? webpackManifest["vendors.js"] : "/dist/vendors.bundle.js"}'></script>
