@@ -31,7 +31,7 @@ module.exports = {
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new webpackShellPlugin({ onBuildEnd: ["npm run serve:dev"]})
+        new webpackShellPlugin({ onBuildEnd: ["npm run serve"]})
     ],
     output: {
         path: path.join(__dirname, "dist"),

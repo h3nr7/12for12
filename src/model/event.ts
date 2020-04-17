@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import { Event as EventInterface } from './event.interface';
+import { Event as IEvent } from './event.interface';
 import { userSchema } from './user';
-export type EventDocument = mongoose.Document & EventInterface;
+export type EventDocument = mongoose.Document & IEvent;
 
 /** Model schema */
 export const eventSchema = new mongoose.Schema({

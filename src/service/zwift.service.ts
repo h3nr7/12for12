@@ -153,3 +153,18 @@ export const findUserSelf = async (token: string): Promise<User> => {
     .catch(logZwiftError)
     .then(responseHandler);
 }
+
+// Get User Stats by start and end datetime
+export const getUserCyclingStats = async (token: string, uid: number, startDateTime:string, endDateTime: string): Promise<any> => {
+    return axios.get(`${ZWFIT_URL}/api/profiles/${uid}/statistics`, {
+        headers: setZwiftHeaderWithToken(token),
+        params: {
+            startDateTime,
+            endDateTime,
+            sport: "CYCLING"
+        }
+    })
+    .then(responseModifier)
+    .catch(logZwiftError)
+    .then(responseHandler);
+}

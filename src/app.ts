@@ -5,6 +5,7 @@ if(process.env.NODE_ENV !== 'production') {
 	dotenv.config();
 }
 
+import mongoose from 'mongoose';
 import express from 'express';
 import session from 'express-session';
 import compression from 'compression';
@@ -14,9 +15,9 @@ import passport from 'passport';
 import cors from "cors";
 import helmet from "helmet";
 
-import Scheduler, { SchedulerJob } from './common/scheduler';
-import { usersRouter } from "./controller/users/users.router";
-import { eventsRouter } from './controller/events/events.router';
+import { authController } from "./controller/auth.controller";
+import { usersController } from "./controller/users.controller";
+import { eventsController } from './controller/events.controller';
 import { errorHandler } from './middleware/error.middleware';
 import { notFoundHandler } from './middleware/notFound.middleware';
 
@@ -27,12 +28,21 @@ const PORT: number = parseInt(process.env.PORT as string, 10);
 const SESSION_SECRET: string = process.env.SESSION_SECRET;
 const BASE_SCHEDULE_TIME: string = process.env.BASE_SCHEDULE_TIME_PATTERN;
 const MemStore = MemoryStore(session);
+const MONGODB_URI = process.env.MONGODB_URI;
 /** App config */
 const app = express();
 
+mongoose.connect(MONGODB_URI, {
+	useNewUrlParser: true,
+	useCreateIndex: true,
+	useUnifiedTopology: true
+})
+.then(() => { console.log('Mongoose connected successfully!')})
+.catch((e:any) => { console.error('Mongoose connection error', e) });
+
 app.use(compression());
 app.use(helmet());
-app.use(cors());
+// app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
@@ -49,8 +59,9 @@ app.use(passport.session());
 
 
 /** App routing */
-app.use("/users", usersRouter);
-app.use("/events", eventsRouter);
+app.use("/auth", authController);
+app.use("/api/users", usersController);
+app.use("/api/events", eventsController);
 
 app.use(errorHandler);
 app.use(notFoundHandler);
@@ -62,7 +73,7 @@ app.get('/', (req, res) => {
 
 const server = app.listen(PORT, err => {
 	if(err) return console.error(err);
-	return console.log(`server is listeneing on ${PORT}`);
+	return console.log(`server is listening on ${PORT}`);
 });
 
 /** Webpack HMR activation */
