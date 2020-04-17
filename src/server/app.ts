@@ -5,6 +5,8 @@ if(process.env.NODE_ENV !== 'production') {
 	dotenv.config();
 }
 
+import path from "path";
+import favicon from "serve-favicon";
 import mongoose from 'mongoose';
 import express from 'express';
 import session from 'express-session';
@@ -15,6 +17,7 @@ import passport from 'passport';
 import cors from "cors";
 import helmet from "helmet";
 
+import { homeController } from "./controller/home.controller";
 import { authController } from "./controller/auth.controller";
 import { usersController } from "./controller/users.controller";
 import { eventsController } from './controller/events.controller';
@@ -44,6 +47,7 @@ app.use(compression());
 app.use(helmet());
 // app.use(cors());
 app.use(bodyParser.json());
+app.use(compression());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
 	resave: true,
@@ -57,11 +61,16 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-
+/** assets routing */
+app.use(favicon(path.join(__dirname, "..", "..", "public", "favicon.ico")));
 /** App routing */
 app.use("/auth", authController);
 app.use("/api/users", usersController);
 app.use("/api/events", eventsController);
+/** static routing */
+app.use("/dist", express.static(path.join(__dirname, "..", "dist")));
+/** home */
+app.use("/", homeController);
 
 app.use(errorHandler);
 app.use(notFoundHandler);

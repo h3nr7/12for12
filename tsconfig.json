@@ -7,16 +7,15 @@
 		"removeComments": true,
 		"preserveConstEnums": true,
 		"sourceMap": true,
-		"outDir": "./dist",
-		"baseUrl": "./",
-		"typeRoots": ["node_mdules/@types", "typings"]
+		"outDir": "./build",		
+		"typeRoots": ["node_mdules/@types", "./src/shared/typings"]
 	},
 	"include": [
-		"src/**/*"
+		"./src/**/*"
 	],
 	"exclude": [
 		"node_modules",
-		"typings",
+		"./src/shared/typings",
 		"**/*.spec.ts"
 	]
 	
