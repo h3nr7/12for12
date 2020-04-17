@@ -1,0 +1,10 @@
+.awcache
+.cache-loader
+.localstorage
+.vscode
+dist
+contents
+logs
+minio
+node_modules
+deploy
