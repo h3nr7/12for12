@@ -14,6 +14,7 @@ import passport from 'passport';
 import cors from "cors";
 import helmet from "helmet";
 
+import Scheduler, { SchedulerJob } from './common/scheduler';
 import { usersRouter } from "./controller/users/users.router";
 import { eventsRouter } from './controller/events/events.router';
 import { errorHandler } from './middleware/error.middleware';
@@ -24,6 +25,7 @@ import * as passportConfig from './config/passport';
 /**  App variables */
 const PORT: number = parseInt(process.env.PORT as string, 10);
 const SESSION_SECRET: string = process.env.SESSION_SECRET;
+const BASE_SCHEDULE_TIME: string = process.env.BASE_SCHEDULE_TIME_PATTERN;
 const MemStore = MemoryStore(session);
 /** App config */
 const app = express();
@@ -48,7 +50,7 @@ app.use(passport.session());
 
 /** App routing */
 app.use("/users", usersRouter);
-// app.use("/events", eventsRouter);
+app.use("/events", eventsRouter);
 
 app.use(errorHandler);
 app.use(notFoundHandler);
@@ -57,7 +59,7 @@ app.use(notFoundHandler);
 app.get('/', (req, res) => {
 	res.send('All starts here too man');
 });
-	
+
 const server = app.listen(PORT, err => {
 	if(err) return console.error(err);
 	return console.log(`server is listeneing on ${PORT}`);

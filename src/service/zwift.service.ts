@@ -1,18 +1,22 @@
-/** Data Model Interafaces */
-import { User } from "./user.interface";
-import { Users } from "./users.interface";
-import { ZwiftAuthResponse } from "./auth-response.interface";
-import { ZwiftHeaders } from "./zwift-headers.interface";
-import { ModifiedResponse } from "./modified-response.interface";
-import axios, { AxiosResponse } from "axios";
+/** Data Model Interfaces */
+import { Event, Events } from "../model/event.interface";
+import { User, Users } from "../model/user.interface";
+import { ZwiftAuthResponse, ZwiftHeaders, ModifiedResponse } from "./zwift.interface";
+import axios, { AxiosResponse } from 'axios';
 import qs, { ParsedUrlQueryInput } from "querystring";
-import { NextFunction } from "express";
 
+
+/**
+ * VARS
+ */
 const ZWIFT_SECURE_URL = process.env.ZWIFT_API_SECURE_URL;
 const ZWFIT_URL = process.env.ZWIFT_API_URL;
 
 
-/** Helper */
+/**
+ * SET REQUEST HEADERS
+ */
+//  default Set Zwift Headers
 const zwiftHeaders: ZwiftHeaders = {
     "Host": "us-or-rly101.zwift.com",
     "Connection": "keep-alive",
@@ -21,6 +25,14 @@ const zwiftHeaders: ZwiftHeaders = {
     "Accept-Encoding": "gzip, deflate, br"
 }
 
+// set zwift headers with token
+const setZwiftHeaderWithToken = (token: string): ZwiftHeaders => ({
+    ...zwiftHeaders,
+    "Accept": "application/json",
+    "Authorization": `Bearer ${token}`
+});
+
+// set zwift auth header
 const zwiftAuthHeaders: ZwiftHeaders = {
     ...zwiftHeaders,
     "Host": "secure.zwift.com",
@@ -29,12 +41,10 @@ const zwiftAuthHeaders: ZwiftHeaders = {
     "Accept": "*/*"
 }
 
-const setZwiftHeaderWithToken = (token: string): ZwiftHeaders => ({
-    ...zwiftHeaders,
-    "Accept": "application/json",
-    "Authorization": `Bearer ${token}`
-});
-
+/**
+ * RESPONSE MODIFIER
+ */
+// single document responst modifier
 const responseModifier = (response: AxiosResponse): Promise<ModifiedResponse> => {
     return Promise.resolve({
         statusCode: response.status,
@@ -43,18 +53,51 @@ const responseModifier = (response: AxiosResponse): Promise<ModifiedResponse> =>
     });
 };
 
+// Modify array response into Key, Value Objects
+const arrayResponseModifier = (response: AxiosResponse): Promise<ModifiedResponse> => {
+    return Promise.resolve({
+        statusCode: response.status,
+        statusText: response.statusText,
+        data: Object.assign({}, ...response.data.map((obj: any) => ({[obj.id]: obj})))
+    });
+};
+
+/** log zwift error */
 const logZwiftError = (err: Error): Promise<any> => {
     console.error('Zwift error', err);
     return Promise.reject(err);
 }
 
-const userResponseHandler = (res: any): User => {
-    const {id, firstName , lastName, male, imageSrc, imageSrcLarge} = res.data;
-    const outUser: User = {id, firstName, lastName, male, imageSrc, imageSrcLarge};
-    return outUser;
+/** handle and return response data only */
+const responseHandler = (res: any): Users & User & Events & Event => {
+    return res.data;
 }
 
-/** Service Methods */
+/**
+ * SERVICE FUNCTIONS
+ */
+// get event by start and end timestamp
+export const findEventsByTimeRange = async (
+    token: string, 
+    startTimestamp: number, 
+    endTimestamp: number
+): Promise<Events> => {
+        const params = {
+            "start_date": startTimestamp,
+            "end_date": endTimestamp,
+        };
+        return axios.get(
+            `${ZWFIT_URL}/api/private_event/feed`, 
+            { 
+                headers: setZwiftHeaderWithToken(token),
+                params
+            }
+        )
+        .then(arrayResponseModifier)
+        .catch(logZwiftError)
+        .then(responseHandler);
+    }
+
 // Login by username and password
 export const emailLogin = async (email: string, password: string): Promise<ZwiftAuthResponse> => {
     const requestBody: ParsedUrlQueryInput = {
@@ -92,25 +135,21 @@ export const refreshTokenLogin = async (refreshToken: string): Promise<ZwiftAuth
 }
 
 // Find a user by profile id
-export const find = async (token: string, uid: string): Promise<User> => {
+export const findUser = async (token: string, uid: string): Promise<User> => {
     return axios.get(`${ZWFIT_URL}/api/profiles/${uid}`, {
         headers: setZwiftHeaderWithToken(token)
     })
     .then(responseModifier)
     .catch(logZwiftError)
-    .then(userResponseHandler);
+    .then(responseHandler);
 }
 
 // Find self
-export const findSelf = async (token: string): Promise<User> => {
+export const findUserSelf = async (token: string): Promise<User> => {
     return axios.get(`${ZWFIT_URL}/api/profiles/me`, {
         headers: setZwiftHeaderWithToken(token)
     })
     .then(responseModifier)
     .catch(logZwiftError)
-    .then(userResponseHandler);
+    .then(responseHandler);
 }
-
-// Get all followers
-
-// Get all followees

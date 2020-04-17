@@ -8,14 +8,15 @@
 		"preserveConstEnums": true,
 		"sourceMap": true,
 		"outDir": "./dist",
-		"typeRoots": ["./types", "node_mdules/@types"]
+		"baseUrl": "./",
+		"typeRoots": ["node_mdules/@types", "typings"]
 	},
 	"include": [
 		"src/**/*"
 	],
 	"exclude": [
 		"node_modules",
-		"types",
+		"typings",
 		"**/*.spec.ts"
 	]
 	

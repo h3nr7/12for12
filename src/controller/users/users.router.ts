@@ -1,10 +1,9 @@
 /** Required External Modules and Interfaces */
 
 import express, { Request, Response } from "express";
-import * as UserService from "./users.service";
-import { User } from "./user.interface";
-import { Users } from "./users.interface";
-import { ZwiftAuthResponse } from "./auth-response.interface";
+import { emailLogin, refreshTokenLogin, findUserSelf, findUser } from "../../service/zwift.service";
+import { User, Users } from "../../model/user.interface";
+import { ZwiftAuthResponse } from "../../service/zwift.interface";
 import { request } from "http";
 
 /** Router Definition */
@@ -17,7 +16,7 @@ usersRouter.post("/auth/login", async (req: Request, res: Response) => {
     try {
         const email: string = req.body.email;
         const password: string = req.body.password
-        const auth: ZwiftAuthResponse = await UserService.emailLogin(email, password);
+        const auth: ZwiftAuthResponse = await emailLogin(email, password);
         res.status(200).send(auth);
     } catch(e) {
         res.status(404).send(e.message);
@@ -27,7 +26,7 @@ usersRouter.post("/auth/login", async (req: Request, res: Response) => {
 usersRouter.post("/auth/token", async (req: Request, res: Response) => {
     try {
         const token: string = req.body.token;
-        const auth: ZwiftAuthResponse = await UserService.refreshTokenLogin(token);
+        const auth: ZwiftAuthResponse = await refreshTokenLogin(token);
         res.status(200).send(auth);
     } catch(e) {
         res.status(404).send(e.message);
@@ -38,7 +37,7 @@ usersRouter.post("/auth/token", async (req: Request, res: Response) => {
 usersRouter.get("/me", async (req: Request, res: Response) => {
     try {
         const token: string = req.body.token;
-        const user: User = await UserService.findSelf(token);
+        const user: User = await findUserSelf(token);
         res.status(200).send(user);
     } catch(e) {
         res.status(404).send(e.message);
@@ -49,7 +48,7 @@ usersRouter.get("/:id", async (req: Request, res: Response) => {
     try {
         const token: string = req.body.token;
         const userId: string = req.params.id;
-        const user: User = await UserService.find(token, userId);
+        const user: User = await findUser(token, userId);
         res.status(200).send(user);
     } catch(e) {
         res.status(404).send(e.message);
