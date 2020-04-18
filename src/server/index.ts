@@ -1,7 +1,6 @@
 /** Required modules */
-import * as dotenv from 'dotenv';
-
 if(process.env.NODE_ENV !== 'production') {
+    const dotenv = require('dotenv');
 	dotenv.config();
 }
 
