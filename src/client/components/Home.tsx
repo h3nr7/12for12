@@ -13,7 +13,7 @@ import { NODATA } from "dns";
 
 const CustomScatteredPlot = ({data}: {data: Array<any>}) => {
 
-  let outData = data[0].arrFriends.map(o => ({
+  let outData = data[0].arrFriends.map((o: any) => ({
     id: `${o.firstName} ${o.lastName}`,
     data: [{
       x: o.aggDistanceInMeters,
@@ -26,8 +26,8 @@ const CustomScatteredPlot = ({data}: {data: Array<any>}) => {
   return <ResponsiveScatterPlot
       data={outData}
       margin={{ top: 30, right: 200, bottom: 60, left: 60 }} 
-      xFormat={(e) => {return `${String(Math.round(e/1000))}KM`}}
-      yFormat={(e) => {return `${String(Math.floor(e/60))}HOUR ${String(e%60)}MINS`}} 
+      xFormat={(e: number) => {return `${String(Math.round(e/1000))}KM`}}
+      yFormat={(e: number) => {return `${String(Math.floor(e/60))}HOUR ${String(e%60)}MINS`}} 
       blendMode="multiply"
       axisLeft={{
         orient: 'right',
@@ -71,7 +71,7 @@ const CustomScatteredPlot = ({data}: {data: Array<any>}) => {
         }
     ]}
     nodeSize={nDat=>{
-      return Math.random() * Math.max(1, nDat.y/250) * Math.exp(0.00065*nDat.x/nDat.y) * Math.exp(0.006*nDat.x/nDat.y);
+      return Math.random() * Math.max(1, Number(nDat.y)/250) * Math.exp(0.00065*Number(nDat.x)/Number(nDat.y)) * Math.exp(0.006*Number(nDat.x)/Number(nDat.y));
     }}
    />
   };
@@ -95,7 +95,7 @@ function getUserData(listen:boolean=true) {
   return data;
 }
 
-function AggUserData({listen, children}) {
+const AggUserData: React.FunctionComponent = ({listen, children}: {listen:any, children: any}) => {
   let data = getUserData(listen);
   return children(data);
 }
@@ -110,7 +110,7 @@ class HomeComponent extends React.Component<{}> {
               <Grid item xs={12}>
                   <Card style={{height: 480}}>
                     <AggUserData>
-                      {(obj) => {
+                      {(obj: any) => {
                         return <CustomScatteredPlot data={[obj]} />
                       }}
                       </AggUserData>
@@ -124,7 +124,7 @@ class HomeComponent extends React.Component<{}> {
                       </Typography>
                       <List>
                         <AggUserData>
-                          {(obj) => {
+                          {(obj: any) => {
                             let friends = [...obj.arrFriends];
                             friends.sort((b, a) => Number(a.aggregatedStats.heightClimbedInMeters) - Number(b.aggregatedStats.heightClimbedInMeters));
                             return friends.map(o => (
@@ -135,7 +135,7 @@ class HomeComponent extends React.Component<{}> {
                                 </Grid>
                               </ListItem>
                             ));
-                          }
+                          }}
                         </AggUserData>
                       </List>
                       </CardContent>
@@ -149,7 +149,7 @@ class HomeComponent extends React.Component<{}> {
                       </Typography>
                       <List>
                         <AggUserData>
-                          {(obj) => {
+                          {(obj: any) => {
                             let friends = [...obj.arrFriends];
                             friends.sort((b, a) => Number(a.aggDistanceInMeters) - Number(b.aggDistanceInMeters));
                             return friends.map(o => (
@@ -160,7 +160,7 @@ class HomeComponent extends React.Component<{}> {
                                 </Grid>
                               </ListItem>
                             ));
-                          }
+                            }}
                         </AggUserData>
                       </List>
                   </CardContent>
@@ -174,7 +174,7 @@ class HomeComponent extends React.Component<{}> {
                       </Typography>
                       <List>
                         <AggUserData>
-                          {(obj) => {
+                          {(obj: any) => {
                             let friends = [...obj.arrFriends];
                             friends.sort((b, a) => Number(a.aggTimeInMinutes) - Number(b.aggTimeInMinutes));
                             return friends.map(o => (
@@ -185,7 +185,7 @@ class HomeComponent extends React.Component<{}> {
                                 </Grid>
                               </ListItem>
                             ));
-                          }
+                          }}
                         </AggUserData>
                       </List>
                 </CardContent>
