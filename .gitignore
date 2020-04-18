@@ -1,3 +1,21 @@
 node_modules
 build
+.cache-loader
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# dotenv environment variables file
 .env
+
+.history
+.DS_Store
+.awcache

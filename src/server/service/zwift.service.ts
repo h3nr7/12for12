@@ -2,8 +2,8 @@
 import { Event, Events } from "../model/event.interface";
 import { User, Users } from "../model/user.interface";
 import { ZwiftAuthResponse, ZwiftHeaders, ModifiedResponse } from "./zwift.interface";
-import axios, { AxiosResponse } from 'axios';
-import qs, { ParsedUrlQueryInput } from "querystring";
+import * as axios from 'axios';
+import * as qs from "querystring";
 
 
 /**
@@ -45,7 +45,7 @@ const zwiftAuthHeaders: ZwiftHeaders = {
  * RESPONSE MODIFIER
  */
 // single document responst modifier
-const responseModifier = (response: AxiosResponse): Promise<ModifiedResponse> => {
+const responseModifier = (response: axios.AxiosResponse): Promise<ModifiedResponse> => {
     return Promise.resolve({
         statusCode: response.status,
         statusText: response.statusText,
@@ -54,7 +54,7 @@ const responseModifier = (response: AxiosResponse): Promise<ModifiedResponse> =>
 };
 
 // Modify array response into Key, Value Objects
-const arrayResponseModifier = (response: AxiosResponse): Promise<ModifiedResponse> => {
+const arrayResponseModifier = (response: axios.AxiosResponse): Promise<ModifiedResponse> => {
     return Promise.resolve({
         statusCode: response.status,
         statusText: response.statusText,
@@ -86,7 +86,7 @@ export const findEventsByTimeRange = async (
             "start_date": startTimestamp,
             "end_date": endTimestamp,
         };
-        return axios.get(
+        return axios.default.get(
             `${ZWFIT_URL}/api/private_event/feed`, 
             { 
                 headers: setZwiftHeaderWithToken(token),
@@ -100,13 +100,13 @@ export const findEventsByTimeRange = async (
 
 // Login by username and password
 export const emailLogin = async (email: string, password: string): Promise<ZwiftAuthResponse> => {
-    const requestBody: ParsedUrlQueryInput = {
+    const requestBody: qs.ParsedUrlQueryInput = {
         "client_id": "Zwift_Mobile_Link",
         "grant_type": "password",
         "username": email,
         "password": password
     };
-    return axios.post(
+    return axios.default.post(
         `${ZWIFT_SECURE_URL}/auth/realms/zwift/protocol/openid-connect/token`,
         qs.stringify(requestBody),
         { headers: zwiftAuthHeaders }
@@ -118,13 +118,13 @@ export const emailLogin = async (email: string, password: string): Promise<Zwift
 
 // login by refresh token
 export const refreshTokenLogin = async (refreshToken: string): Promise<ZwiftAuthResponse> => {
-    const requestBody: ParsedUrlQueryInput = {
+    const requestBody: qs.ParsedUrlQueryInput = {
         "client_id": "Zwift_Mobile_Link",
         "grant_type": "refresh_token",
         "refresh_token": refreshToken
     };
 
-    return axios.post(
+    return axios.default.post(
         `${ZWIFT_SECURE_URL}/auth/realms/zwift/protocol/openid-connect/token`, 
         qs.stringify(requestBody),
         { headers: zwiftAuthHeaders }
@@ -136,7 +136,7 @@ export const refreshTokenLogin = async (refreshToken: string): Promise<ZwiftAuth
 
 // Find a user by profile id
 export const findUser = async (token: string, uid: string): Promise<User> => {
-    return axios.get(`${ZWFIT_URL}/api/profiles/${uid}`, {
+    return axios.default.get(`${ZWFIT_URL}/api/profiles/${uid}`, {
         headers: setZwiftHeaderWithToken(token)
     })
     .then(responseModifier)
@@ -146,7 +146,7 @@ export const findUser = async (token: string, uid: string): Promise<User> => {
 
 // Find self
 export const findUserSelf = async (token: string): Promise<User> => {
-    return axios.get(`${ZWFIT_URL}/api/profiles/me`, {
+    return axios.default.get(`${ZWFIT_URL}/api/profiles/me`, {
         headers: setZwiftHeaderWithToken(token)
     })
     .then(responseModifier)
@@ -156,7 +156,7 @@ export const findUserSelf = async (token: string): Promise<User> => {
 
 // Get User Stats by start and end datetime
 export const getUserCyclingStats = async (token: string, uid: number, startDateTime:string, endDateTime: string): Promise<any> => {
-    return axios.get(`${ZWFIT_URL}/api/profiles/${uid}/statistics`, {
+    return axios.default.get(`${ZWFIT_URL}/api/profiles/${uid}/statistics`, {
         headers: setZwiftHeaderWithToken(token),
         params: {
             startDateTime,

@@ -1,6 +1,6 @@
-import passport from 'passport';
-import passportLocal from 'passport-local';
-import _ from 'lodash';
+import * as passport from 'passport';
+import * as passportLocal from 'passport-local';
+import * as _ from 'lodash';
 
 const LocalStrategy = passportLocal.Strategy;
 

@@ -1,5 +1,5 @@
 /** Required External Modules and Interfaces */
-import express, { Request, Response } from "express";
+import * as express from "express";
 import { findUserSelf, findUser, getUserCyclingStats } from "../service/zwift.service";
 import { User, Users } from "../model/user.interface";
 
@@ -8,7 +8,7 @@ export const usersController = express.Router();
 
 /** Controller Definitions */
 // get self
-usersController.get("/me", async (req: Request, res: Response) => {
+usersController.get("/me", async (req: express.Request, res: express.Response) => {
     try {
         const token: string = req.body.token;
         const user: User = await findUserSelf(token);
@@ -19,7 +19,7 @@ usersController.get("/me", async (req: Request, res: Response) => {
 });
 
 // get user by id
-usersController.get("/:id", async (req: Request, res: Response) => {
+usersController.get("/:id", async (req: express.Request, res: express.Response) => {
     try {
         const token: string = req.body.token;
         const userId: string = req.params.id;
@@ -31,7 +31,7 @@ usersController.get("/:id", async (req: Request, res: Response) => {
 });
 
 // get user stats by id
-usersController.get("/:id/stats", async (req: Request, res: Response) => {
+usersController.get("/:id/stats", async (req: express.Request, res: express.Response) => {
     try {
         const token:string = req.body.token;
         const userId:number = Number(req.params.id);
@@ -45,12 +45,12 @@ usersController.get("/:id/stats", async (req: Request, res: Response) => {
 });
 
 // GET users/followers
-usersController.get("/:id/followers", async (req: Request, res: Response) => {
+usersController.get("/:id/followers", async (req: express.Request, res: express.Response) => {
 
 });
 
 // Get users/followees
-usersController.get("/:id/followees", async (req: Request, res: Response) => {
+usersController.get("/:id/followees", async (req: express.Request, res: express.Response) => {
 
 });
 

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import * as mongoose from 'mongoose';
 import { Event as IEvent } from './event.interface';
 import { userSchema } from './user';
 export type EventDocument = mongoose.Document & IEvent;

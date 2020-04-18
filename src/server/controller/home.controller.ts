@@ -1,11 +1,12 @@
-import express, { Request, Response } from 'express';
+import * as express from 'express';
 import * as loadjsonfile from "load-json-file";
 import * as path from "path";
 
 export const homeController = express.Router();
 
-let webpackManifest: any = {};
+const isDevMode = process.env.NODE_ENV === "development" || false;
 const isProdMode = process.env.NODE_ENV === "production" || false;
+let webpackManifest: any = {};
 if (isProdMode) {
     webpackManifest = loadjsonfile.sync(path.resolve(__dirname, "..", "..", "dist", "manifest.json"));
 }
@@ -27,7 +28,7 @@ const renderFullPage = () => {
             </html>`;
 };
 
-homeController.get("/", (req: Request, res: Response) => {
+homeController.get("/", (req: express.Request, res: express.Response) => {
     res.set("Content-Type", "text/html")
         .status(200)
         .end(renderFullPage());

@@ -8,7 +8,7 @@ const AppComponent: React.StatelessComponent<{}> = (props) => {
     return (
         <Container>
             <Card>
-                <h1>Hello</h1>
+                <h1>Hello world! 2</h1>
             </Card>
         </Container>
     );

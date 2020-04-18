@@ -1,109 +1,92 @@
-/** Required modules */
-import * as dotenv from 'dotenv';
+import * as config from "config";
+import * as fs from "fs";
+import * as path from "path";
+import * as mongoose from 'mongoose';
+import * as express from 'express';
+import * as session from 'express-session';
+import * as compression from 'compression';
+import * as MemoryStore from "memorystore";
+import * as bodyParser from 'body-parser';
+import * as passport from 'passport';
+import * as cors from "cors";
+import * as helmet from "helmet";
 
-if(process.env.NODE_ENV !== 'production') {
-	dotenv.config();
-}
+import * as webpack from 'webpack';
+import * as webpackDevMiddleware from "webpack-dev-middleware";
+import * as webpackHotMiddleware from "webpack-hot-middleware";
+import * as webpackConfig from '../webpack/webpack.config.dev';
+import { registerRoutes } from './controller/index';
 
-import path from "path";
-import favicon from "serve-favicon";
-import mongoose from 'mongoose';
-import express from 'express';
-import session from 'express-session';
-import compression from 'compression';
-import MemoryStore from "memorystore";
-import bodyParser from 'body-parser';
-import passport from 'passport';
-import cors from "cors";
-import helmet from "helmet";
+const isDevMode: boolean = process.env.NODE_ENV === "development" || false;
+const isProdMode: boolean = process.env.NODE_ENV === "production" || false;
 
-import { homeController } from "./controller/home.controller";
-import { authController } from "./controller/auth.controller";
-import { usersController } from "./controller/users.controller";
-import { eventsController } from './controller/events.controller';
 import { errorHandler } from './middleware/error.middleware';
 import { notFoundHandler } from './middleware/notFound.middleware';
-
 import * as passportConfig from './config/passport';
 
-/**  App variables */
-const PORT: number = parseInt(process.env.PORT as string, 10);
-const SESSION_SECRET: string = process.env.SESSION_SECRET;
-const BASE_SCHEDULE_TIME: string = process.env.BASE_SCHEDULE_TIME_PATTERN;
-const MemStore = MemoryStore(session);
-const MONGODB_URI = process.env.MONGODB_URI;
-/** App config */
-const app = express();
 
-mongoose.connect(MONGODB_URI, {
-	useNewUrlParser: true,
-	useCreateIndex: true,
-	useUnifiedTopology: true
-})
-.then(() => { console.log('Mongoose connected successfully!')})
-.catch((e:any) => { console.error('Mongoose connection error', e) });
+/**
+ * CREATE AND BEGIN PP
+ * @param logfilePath 
+ */
+export function createApp(logfilePath: string): express.Application {
 
-app.use(compression());
-app.use(helmet());
-// app.use(cors());
-app.use(bodyParser.json());
-app.use(compression());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(session({
-	resave: true,
-	saveUninitialized: true,
-	secret: SESSION_SECRET,
-	store: new MemStore({
-		checkPeriod: 86400000
+	// init app
+	const app: express.Application = express();
+	// logger streams
+	const accessLogFilename: string = config.get("Logfiles.AccessFilename");
+	const accessLogStream: fs.WriteStream = fs.createWriteStream(path.join(logfilePath, accessLogFilename), { flags: "a" });
+	
+	// dev mode webpack compiler
+	if(isDevMode) {
+		const compiler: webpack.ICompiler = webpack(webpackConfig as webpack.Configuration);
+		app.use(webpackDevMiddleware(compiler, { publicPath: webpackConfig.output.publicPath }));
+		app.use(webpackHotMiddleware(compiler));
+	}
+
+	// prod mode built static resources
+	app.use("/public", express.static(path.join(__dirname, "..", "..", "public")));
+	if(isProdMode) {
+		app.use("/dist", express.static(path.join(__dirname, "..", "dist")));
+	}
+
+	/**  App variables */
+	const SESSION_SECRET: string = process.env.SESSION_SECRET;
+	const BASE_SCHEDULE_TIME: string = process.env.BASE_SCHEDULE_TIME_PATTERN;
+	const MemStore = MemoryStore(session);
+	const MONGODB_URI = process.env.MONGODB_URI;
+
+	mongoose.connect(MONGODB_URI, {
+		useNewUrlParser: true,
+		useCreateIndex: true,
+		useUnifiedTopology: true
 	})
-}));
-app.use(passport.initialize());
-app.use(passport.session());
+	.then(() => { console.log('Mongoose connected successfully!')})
+	.catch((e:any) => { console.error('Mongoose connection error', e) });
 
 
-/** assets routing */
-app.use(favicon(path.join(__dirname, "..", "..", "public", "favicon.ico")));
-/** App routing */
-app.use("/auth", authController);
-app.use("/api/users", usersController);
-app.use("/api/events", eventsController);
-/** static routing */
-app.use("/dist", express.static(path.join(__dirname, "..", "dist")));
-/** home */
-app.use("/", homeController);
+	// app use
+	app.use(compression());
+	app.use(helmet());
+	app.use(cors());
+	app.use(bodyParser.json());
+	app.use(compression());
+	app.use(bodyParser.urlencoded({ extended: true }));
+	app.use(session({
+		resave: true,
+		saveUninitialized: true,
+		secret: SESSION_SECRET,
+		store: new MemStore({
+			checkPeriod: 86400000
+		})
+	}));
+	app.use(passport.initialize());
+	app.use(passport.session()); 
 
-app.use(errorHandler);
-app.use(notFoundHandler);
+	registerRoutes(app);
 
-/** Server activation */
-app.get('/', (req, res) => {
-	res.send('All starts here too man');
-});
+	app.use(errorHandler);
+	app.use(notFoundHandler);
 
-const server = app.listen(PORT, err => {
-	if(err) return console.error(err);
-	return console.log(`server is listening on ${PORT}`);
-});
-
-/** Webpack HMR activation */
-type ModuleId = string | number;
-
-interface WebpackHotModule {
-	hot?: {
-		data: any;
-		accept(
-			dependencies: string[],
-			callback?: (updatedDependencies: ModuleId[]) => void
-		): void;
-		accept(dependency: string, callback?: () => void): void;
-		accept(errHandler?: (err: Error) => void): void;
-		dispose(callback: (data: any) => void): void;
-	};
-}
-
-declare const module: WebpackHotModule;
-
-if(module.hot) {
-	module.hot.accept();
-	module.hot.dispose(() => server.close());
+	return app;
 }

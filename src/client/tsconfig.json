@@ -1,7 +1,6 @@
 {
     "compilerOptions": {
         "sourceMap": true,
-        "allowJs": true,
         "noImplicitAny": true,
         "module": "commonjs",
         "lib": ["es6", "dom"],
@@ -9,16 +8,13 @@
         "jsx": "react",
         "moduleResolution": "node",
         "typeRoots": [
-            "node_modules/@types",
+            "../../node_modules/@types",
             "../shared/typings"
         ]
     },
-    "include": [
-      "./**/*"
-    ],
     "exclude": [
       "node_modules",
-      "../shared/typings",
+      "build",
       "./**/*.spec.ts"
     ]
 }

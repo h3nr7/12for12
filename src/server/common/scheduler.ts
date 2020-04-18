@@ -1,11 +1,6 @@
-import schedule, { 
-    RecurrenceRule,
-    RecurrenceSpecDateRange,
-    RecurrenceSpecObjLit,
-    Job, 
-    JobCallback} from 'node-schedule';
+import * as schedule from 'node-schedule';
 
-import events from 'events';
+import * as events from 'events';
 
 /**
  * HOW TO USE SCHEDULER
@@ -29,7 +24,7 @@ import events from 'events';
  */
 
 /** interface for scheduler job */
-export interface SchedulerJob extends Job { }
+export interface SchedulerJob extends schedule.Job { }
 
 /** interface for scheulder jobs  */
 export interface SchedulerJobs  {
@@ -44,8 +39,8 @@ export default class Scheduler extends events.EventEmitter {
 
     add (
         key: number, 
-        rule: RecurrenceRule | RecurrenceSpecDateRange | RecurrenceSpecObjLit | Date | string | number,
-        func: JobCallback
+        rule: schedule.RecurrenceRule | schedule.RecurrenceSpecDateRange | schedule.RecurrenceSpecObjLit | Date | string | number,
+        func: schedule.JobCallback
     ): void {
         this.tasks[key] = schedule.scheduleJob(rule, func);
         this.emit(Scheduler.ADDED, { 

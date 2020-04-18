@@ -1,6 +1,6 @@
 /** Required External Modules and Interfaces */
 
-import express, { Request, Response } from "express";
+import * as express from "express";
 import { emailLogin, refreshTokenLogin } from "../service/zwift.service";
 import { ZwiftAuthResponse } from "../service/zwift.interface";
 
@@ -10,7 +10,7 @@ export const authController = express.Router();
 /** Controller Definitions */
 
 // auth users/
-authController.post("/login", async (req: Request, res: Response) => {
+authController.post("/login", async (req: express.Request, res: express.Response) => {
     try {
         const email: string = req.body.email;
         const password: string = req.body.password
@@ -21,7 +21,7 @@ authController.post("/login", async (req: Request, res: Response) => {
     }
 });
 
-authController.post("/token", async (req: Request, res: Response) => {
+authController.post("/token", async (req: express.Request, res: express.Response) => {
     try {
         const token: string = req.body.token;
         const auth: ZwiftAuthResponse = await refreshTokenLogin(token);

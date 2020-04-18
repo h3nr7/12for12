@@ -16,11 +16,7 @@ const {
 
 module.exports = {
     mode: "development",
-    watch: true,
-    watchOptions: {
-        poll: 1000 // Check for changes every second
-    },
-    devtool: "inline-source-map",
+    devtool: "source-map",
     entry: [
         "babel-polyfill",
         "react-hot-loader/patch",
@@ -34,6 +30,9 @@ module.exports = {
         pathinfo: false
     },
     resolve: {
+        alias: {
+            'react-dom': '@hot-loader/react-dom'
+        },
         extensions: [".ts", ".js", ".jsx", ".tsx"]
     },
     plugins: [
@@ -86,7 +85,7 @@ module.exports = {
             },
             {
                 test: /\.(scss|css)$/,
-                loaders: ["sass-loader", "style-loader", "css-loader"],
+                loaders: ["style-loader", "css-loader"],
                 include: [/** paths to node_module or external css */]          
             },
             {
@@ -116,46 +115,3 @@ module.exports = {
         ]
     }    
 };
-
-// const webpack = require("webpack");
-
-// const path = require("path");
-// const nodeExternals = require("webpack-node-externals");
-// const webpackShellPlugin = require('webpack-shell-plugin');
-
-// module.exports = {
-//     entry: ["webpack/hot/poll?100", "./src/app.ts"],
-//     watch: true,
-//     target: "node",
-//     externals: [
-//         nodeExternals({
-//             whitelist: ["webpack/hot/poll?100"]
-//         })
-//     ],
-//     module: {
-//         rules: [
-//             {
-//                 test: /.tsx?$/,
-//                 use: "ts-loader",
-//                 exclude: /node_modules/
-//             }
-//         ]
-//     },
-//     mode: "development",
-//     resolve: {
-//         extensions: [".tsx", ".ts", ".js"]
-//     },
-//     devtool: "inline-source-map",
-//     devServer: {
-//         contentBase: "../../dist",
-//     },
-//     plugins: [
-//         new webpack.HotModuleReplacementPlugin(),
-//         new webpackShellPlugin({ onBuildEnd: ["npm run serve"]})
-//     ],
-//     output: {
-//         path: path.join(__dirname, "dist"),
-//         filename: "app.js",
-//         publicPath: "dist"
-//     }
-// };

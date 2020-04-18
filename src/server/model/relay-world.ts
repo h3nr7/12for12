@@ -1,5 +1,5 @@
 import { RelayWorld as IRelayWorld, Player as IPlayer } from './relay-world.interface';
-import mongoose from 'mongoose';
+import * as mongoose from 'mongoose';
 export type RelayWorldDocument = mongoose.Document & IRelayWorld;
 
 
