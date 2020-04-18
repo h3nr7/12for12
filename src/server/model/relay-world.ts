@@ -23,8 +23,7 @@ export const playerSchema = new mongoose.Schema({
 })
 
 export const relayWorldSchema = new mongoose.Schema({
-    id: {type: Number, unique: true},
-    worldId: {type: Number, unique: true},
+    worldId: {type: Number},
     name: String,
     playerCount: Number,
     currentWorldTime: Number,

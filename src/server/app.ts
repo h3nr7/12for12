@@ -11,6 +11,15 @@ import * as passport from 'passport';
 import * as cors from "cors";
 import * as helmet from "helmet";
 
+import Scheduler from './common/scheduler';
+import * as zwiftService from './service/zwift.service'
+import { ZwiftAuthResponse, ModifiedResponse } from "./service/zwift.interface";
+import { getRelayWorldFeed } from './service/zwift.service';
+import { RelayWorld } from './model/relay-world.interface';
+import { RelayWorld as RelayWorldModel } from './model/relay-world';
+
+
+
 import * as webpack from 'webpack';
 import * as webpackDevMiddleware from "webpack-dev-middleware";
 import * as webpackHotMiddleware from "webpack-hot-middleware";
@@ -56,6 +65,7 @@ export function createApp(logfilePath: string): express.Application {
 	const MemStore = MemoryStore(session);
 	const MONGODB_URI = process.env.MONGODB_URI;
 
+	// DB job
 	mongoose.connect(MONGODB_URI, {
 		useNewUrlParser: true,
 		useCreateIndex: true,
@@ -64,6 +74,37 @@ export function createApp(logfilePath: string): express.Application {
 	.then(() => { console.log('Mongoose connected successfully!')})
 	.catch((e:any) => { console.error('Mongoose connection error', e) });
 
+	// Scheduler (TEMP)
+	if(isProdMode) {
+		const scheduler = new Scheduler();
+		// cron to get new access-token
+		const refreshToken: string = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJPLUVjXzJJNjg5bW9peGJIZzFfNDZDVFlGeEdZMDViaDluYm5Mcjl0RzY4In0.eyJqdGkiOiI0ODE4OGU1My03OTM2LTQzMzYtYTFjMi05MzY2MDljMmYzZDQiLCJleHAiOjE1ODk3ODIzODcsIm5iZiI6MCwiaWF0IjoxNTg3MTkwMzg3LCJpc3MiOiJodHRwczovL3NlY3VyZS56d2lmdC5jb20vYXV0aC9yZWFsbXMvendpZnQiLCJhdWQiOiJad2lmdF9Nb2JpbGVfTGluayIsInN1YiI6ImJhNWEyZjc3LWY3ZGItNDdiMi1hOWE1LTUxOWY0YzViNDFkZSIsInR5cCI6IlJlZnJlc2giLCJhenAiOiJad2lmdF9Nb2JpbGVfTGluayIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6IjI1MTRlNDg3LWFlOGQtNDcxNi05M2IzLTUyYzQ0OWMzYmQxYiIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJldmVyeWJvZHkiLCJ0cmlhbC1zdWJzY3JpYmVyIiwiZXZlcnlvbmUiLCJiZXRhLXRlc3RlciJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImVtYWlsLXByZWZzLXNlcnZpY2UiOnsicm9sZXMiOlsiYXV0aGVudGljYXRlZC11c2VyIl19LCJteS16d2lmdCI6eyJyb2xlcyI6WyJhdXRoZW50aWNhdGVkLXVzZXIiXX0sIkdhbWVfTGF1bmNoZXIiOnsicm9sZXMiOlsiYXV0aGVudGljYXRlZC11c2VyIl19LCJzc28tZ2F0ZXdheSI6eyJyb2xlcyI6WyJhdXRoZW50aWNhdGVkLXVzZXIiXX0sInN1YnNjcmlwdGlvbi1zZXJ2aWNlIjp7InJvbGVzIjpbImF1dGhlbnRpY2F0ZWQtdXNlciJdfSwiWndpZnQgUkVTVCBBUEkgLS0gcHJvZHVjdGlvbiI6eyJyb2xlcyI6WyJhdXRob3JpemVkLXBsYXllciIsImF1dGhlbnRpY2F0ZWQtdXNlciJdfSwiWndpZnQgWmVuZGVzayI6eyJyb2xlcyI6WyJhdXRoZW50aWNhdGVkLXVzZXIiXX0sIlp3aWZ0IFJlbGF5IFJFU1QgQVBJIC0tIHByb2R1Y3Rpb24iOnsicm9sZXMiOlsiYXV0aG9yaXplZC1wbGF5ZXIiXX0sImVjb20tc2VydmVyIjp7InJvbGVzIjpbImF1dGhlbnRpY2F0ZWQtdXNlciJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fX0.esZEbb0nx76ycYr1VifZfwEAP06a-mjey_Cxrt6k5zlieB0OOAJScAumFVUUXifINo6mKzk5L1HolFk0oL7KymYTBKMS5U8a6lfQygIE49iRoKC4Vt5R6VJJv4q3vvmemSVTrIQGu8zk3jaT4wDn5pUlRTsEimWJzhZnJkK0JPS3ONXuAfF7Lzy0hXlHJqTIYoDYKi0Uqxca2yM1yA-6T7DWbWZmXyjK8JshWKP-kcW4wiG5R7PQPXw9Jbw0kwzGp_-g7Ig4MEAI74xhZzRFPFCoM2T54JfTfWXHWZNNdDmwhikqIxyNDjwA5RLvsmDGTJwy7RBC8vRmTfCIyQ8H6g";
+		let access_token: string = null;
+
+		zwiftService.refreshTokenLogin(refreshToken)
+		.then(res => {
+			access_token = res.access_token;
+			console.log('got initial access token', access_token);
+			getRelayWorldFeed(access_token)
+				.then(relayWorldData => RelayWorldModel.create(relayWorldData))
+				.then(() => { console.log('Added iniitial scheduled record') });
+		});
+
+		scheduler.add(1, '*/15 * * * *', () => {
+			console.log(`new Base Schedule for access tokenstarted for every pattern ${'*/15 * * * *'}`);
+			zwiftService.refreshTokenLogin(refreshToken)
+				.then(res => {
+					access_token = res.access_token;
+				});
+		});
+
+		scheduler.add(2, '*/3 * * * *', () => {
+			console.log(`new Base Schedule started for every pattern ${'*/3 * * * *'}`);
+			getRelayWorldFeed(access_token)
+				.then(relayWorldData => RelayWorldModel.create(relayWorldData))
+				.then(() => { console.log('Added another scheduled record') });
+		});
+	}
 
 	// app use
 	app.use(compression());

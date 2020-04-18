@@ -93,6 +93,10 @@ module.exports = {
                 loader: "url-loader?limit=10000",
             },
             {
+                test: /\.json$/,
+                loader: "json-loader",
+            },
+            {
                 test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
                 loader: "file-loader",
                 include: [/** paths to node_module or external css */] 
