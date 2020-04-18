@@ -190,7 +190,7 @@ class HomeComponent extends React.Component<{}> {
                       </List>
                 </CardContent>
             </Card>
-            <Container spacing={2}>
+            <Container>
 
             </Container>
           </Grid>
