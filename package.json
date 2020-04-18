@@ -7,8 +7,9 @@
     "prod:build:client": "cross-env NODE_ENV=production ./node_modules/.bin/webpack --config ./src/webpack/webpack.config.prod.js",
     "prod:build:server": "cross-env NODE_ENV=production tsc -p ./src/server",
     "build": "rimraf build && npm run prod:build:server && npm run prod:build:client",
-    "start": "cross-env NODE_ENV=production node build/server/index.js",
+    "start": "node build/server/index.js",
     "dev": "rimraf build && cross-env NODE_ENV=development tsc-watch -p ./src/server --onSuccess \"node ./build/server/index.js\"",
+    "dev:start": "cross-env NODE_ENV=production node build/server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
