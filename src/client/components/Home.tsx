@@ -131,7 +131,7 @@ class HomeComponent extends React.Component<{}> {
                               <ListItem key={o.id}>
                                 <Grid container>
                                   <Grid xs={10}>{o.firstName} {o.lastName}</Grid> 
-                                  <Grid xs={2}>{o.aggregatedStats.heightClimbedInMeters}m</Grid>
+                                  <Grid xs={2}>{o.aggregatedStats.heightClimbedInMeters || 0}m</Grid>
                                 </Grid>
                               </ListItem>
                             ));
