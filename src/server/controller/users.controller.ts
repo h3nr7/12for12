@@ -31,7 +31,7 @@ usersController.get("/:id", async (req: express.Request, res: express.Response) 
 });
 
 // get user stats by id
-usersController.get("/:id/stats", async (req: express.Request, res: express.Response) => {
+usersController.put("/:id/stats", async (req: express.Request, res: express.Response) => {
     try {
         const token:string = req.body.token;
         const userId:number = Number(req.params.id);
