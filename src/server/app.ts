@@ -98,45 +98,45 @@ export function createApp(logfilePath: string): express.Application {
 	// ------------------------------------------------------------
 	// Scheduler (TEMP)
 	// ------------------------------------------------------------
-	const scheduler = new Scheduler();
-	const refreshToken: string = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJPLUVjXzJJNjg5bW9peGJIZzFfNDZDVFlGeEdZMDViaDluYm5Mcjl0RzY4In0.eyJqdGkiOiIyYjc1ODQ4NS0yMjBjLTRiMTItOWQ1Mi05ZjE2NDQ4MDY2MmQiLCJleHAiOjE1ODk4MjY3MDcsIm5iZiI6MCwiaWF0IjoxNTg3MjM0NzA3LCJpc3MiOiJodHRwczovL3NlY3VyZS56d2lmdC5jb20vYXV0aC9yZWFsbXMvendpZnQiLCJhdWQiOiJad2lmdF9Nb2JpbGVfTGluayIsInN1YiI6ImJhNWEyZjc3LWY3ZGItNDdiMi1hOWE1LTUxOWY0YzViNDFkZSIsInR5cCI6IlJlZnJlc2giLCJhenAiOiJad2lmdF9Nb2JpbGVfTGluayIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6ImE2MTllMWYxLWQ1ZDAtNDkyZC1hYTA1LTE1ZjE3MWI2ZTJmZSIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJldmVyeWJvZHkiLCJ0cmlhbC1zdWJzY3JpYmVyIiwiZXZlcnlvbmUiLCJiZXRhLXRlc3RlciJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImVtYWlsLXByZWZzLXNlcnZpY2UiOnsicm9sZXMiOlsiYXV0aGVudGljYXRlZC11c2VyIl19LCJteS16d2lmdCI6eyJyb2xlcyI6WyJhdXRoZW50aWNhdGVkLXVzZXIiXX0sIkdhbWVfTGF1bmNoZXIiOnsicm9sZXMiOlsiYXV0aGVudGljYXRlZC11c2VyIl19LCJzc28tZ2F0ZXdheSI6eyJyb2xlcyI6WyJhdXRoZW50aWNhdGVkLXVzZXIiXX0sInN1YnNjcmlwdGlvbi1zZXJ2aWNlIjp7InJvbGVzIjpbImF1dGhlbnRpY2F0ZWQtdXNlciJdfSwiWndpZnQgUkVTVCBBUEkgLS0gcHJvZHVjdGlvbiI6eyJyb2xlcyI6WyJhdXRob3JpemVkLXBsYXllciIsImF1dGhlbnRpY2F0ZWQtdXNlciJdfSwiWndpZnQgWmVuZGVzayI6eyJyb2xlcyI6WyJhdXRoZW50aWNhdGVkLXVzZXIiXX0sIlp3aWZ0IFJlbGF5IFJFU1QgQVBJIC0tIHByb2R1Y3Rpb24iOnsicm9sZXMiOlsiYXV0aG9yaXplZC1wbGF5ZXIiXX0sImVjb20tc2VydmVyIjp7InJvbGVzIjpbImF1dGhlbnRpY2F0ZWQtdXNlciJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fX0.WkDMjvHk3ZGE5Qn9WkgntSrQDtxm9e37HaAck0MprG9ugx5_jc_aHSn2aRLxMgHB35CQmLYfPrxIy0jHEMIacd14jZlhA1Zb0-P1vCqPhmonBkpEAwiYyB8avYGAmQBhgDBy1eJHnm0aPvXaCs6r-_1TjfLSftvkCfcMzOr-0UJS7ZfsBxLgpz1R2UIPaGr05aWh_AidBxeWVYaiyGmnARKdWobtG0GgDSgLGz1KFS5XeaCIoGccRoD3pZkIsURcCpMwN5oJOId2vNy3gQLQ0P6g0-p1UaGoIopV28fgK0Oz5SDu4X0Qd5Z60IYUCWFjXtb8WEVTNpbibdwKadyReQ";
-	let access_token: string = null;
+	// const scheduler = new Scheduler();
+	// const refreshToken: string = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJPLUVjXzJJNjg5bW9peGJIZzFfNDZDVFlGeEdZMDViaDluYm5Mcjl0RzY4In0.eyJqdGkiOiIyYjc1ODQ4NS0yMjBjLTRiMTItOWQ1Mi05ZjE2NDQ4MDY2MmQiLCJleHAiOjE1ODk4MjY3MDcsIm5iZiI6MCwiaWF0IjoxNTg3MjM0NzA3LCJpc3MiOiJodHRwczovL3NlY3VyZS56d2lmdC5jb20vYXV0aC9yZWFsbXMvendpZnQiLCJhdWQiOiJad2lmdF9Nb2JpbGVfTGluayIsInN1YiI6ImJhNWEyZjc3LWY3ZGItNDdiMi1hOWE1LTUxOWY0YzViNDFkZSIsInR5cCI6IlJlZnJlc2giLCJhenAiOiJad2lmdF9Nb2JpbGVfTGluayIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6ImE2MTllMWYxLWQ1ZDAtNDkyZC1hYTA1LTE1ZjE3MWI2ZTJmZSIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJldmVyeWJvZHkiLCJ0cmlhbC1zdWJzY3JpYmVyIiwiZXZlcnlvbmUiLCJiZXRhLXRlc3RlciJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImVtYWlsLXByZWZzLXNlcnZpY2UiOnsicm9sZXMiOlsiYXV0aGVudGljYXRlZC11c2VyIl19LCJteS16d2lmdCI6eyJyb2xlcyI6WyJhdXRoZW50aWNhdGVkLXVzZXIiXX0sIkdhbWVfTGF1bmNoZXIiOnsicm9sZXMiOlsiYXV0aGVudGljYXRlZC11c2VyIl19LCJzc28tZ2F0ZXdheSI6eyJyb2xlcyI6WyJhdXRoZW50aWNhdGVkLXVzZXIiXX0sInN1YnNjcmlwdGlvbi1zZXJ2aWNlIjp7InJvbGVzIjpbImF1dGhlbnRpY2F0ZWQtdXNlciJdfSwiWndpZnQgUkVTVCBBUEkgLS0gcHJvZHVjdGlvbiI6eyJyb2xlcyI6WyJhdXRob3JpemVkLXBsYXllciIsImF1dGhlbnRpY2F0ZWQtdXNlciJdfSwiWndpZnQgWmVuZGVzayI6eyJyb2xlcyI6WyJhdXRoZW50aWNhdGVkLXVzZXIiXX0sIlp3aWZ0IFJlbGF5IFJFU1QgQVBJIC0tIHByb2R1Y3Rpb24iOnsicm9sZXMiOlsiYXV0aG9yaXplZC1wbGF5ZXIiXX0sImVjb20tc2VydmVyIjp7InJvbGVzIjpbImF1dGhlbnRpY2F0ZWQtdXNlciJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fX0.WkDMjvHk3ZGE5Qn9WkgntSrQDtxm9e37HaAck0MprG9ugx5_jc_aHSn2aRLxMgHB35CQmLYfPrxIy0jHEMIacd14jZlhA1Zb0-P1vCqPhmonBkpEAwiYyB8avYGAmQBhgDBy1eJHnm0aPvXaCs6r-_1TjfLSftvkCfcMzOr-0UJS7ZfsBxLgpz1R2UIPaGr05aWh_AidBxeWVYaiyGmnARKdWobtG0GgDSgLGz1KFS5XeaCIoGccRoD3pZkIsURcCpMwN5oJOId2vNy3gQLQ0P6g0-p1UaGoIopV28fgK0Oz5SDu4X0Qd5Z60IYUCWFjXtb8WEVTNpbibdwKadyReQ";
+	// let access_token: string = null;
 
-	app.use((req:express.Request, res: express.Response, next: express.NextFunction) => {
-		req.session.zwift_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJPLUVjXzJJNjg5bW9peGJIZzFfNDZDVFlGeEdZMDViaDluYm5Mcjl0RzY4In0.eyJqdGkiOiI1MDMzM2M4OS1kZjU2LTQ5NjctYWY4NC00ZGQxNzVkYjk5NDEiLCJleHAiOjE1ODcyNTYzMDcsIm5iZiI6MCwiaWF0IjoxNTg3MjM0NzA3LCJpc3MiOiJodHRwczovL3NlY3VyZS56d2lmdC5jb20vYXV0aC9yZWFsbXMvendpZnQiLCJhdWQiOiJad2lmdF9Nb2JpbGVfTGluayIsInN1YiI6ImJhNWEyZjc3LWY3ZGItNDdiMi1hOWE1LTUxOWY0YzViNDFkZSIsInR5cCI6IkJlYXJlciIsImF6cCI6Ilp3aWZ0X01vYmlsZV9MaW5rIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTYxOWUxZjEtZDVkMC00OTJkLWFhMDUtMTVmMTcxYjZlMmZlIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJldmVyeWJvZHkiLCJ0cmlhbC1zdWJzY3JpYmVyIiwiZXZlcnlvbmUiLCJiZXRhLXRlc3RlciJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImVtYWlsLXByZWZzLXNlcnZpY2UiOnsicm9sZXMiOlsiYXV0aGVudGljYXRlZC11c2VyIl19LCJteS16d2lmdCI6eyJyb2xlcyI6WyJhdXRoZW50aWNhdGVkLXVzZXIiXX0sIkdhbWVfTGF1bmNoZXIiOnsicm9sZXMiOlsiYXV0aGVudGljYXRlZC11c2VyIl19LCJzc28tZ2F0ZXdheSI6eyJyb2xlcyI6WyJhdXRoZW50aWNhdGVkLXVzZXIiXX0sInN1YnNjcmlwdGlvbi1zZXJ2aWNlIjp7InJvbGVzIjpbImF1dGhlbnRpY2F0ZWQtdXNlciJdfSwiWndpZnQgUkVTVCBBUEkgLS0gcHJvZHVjdGlvbiI6eyJyb2xlcyI6WyJhdXRob3JpemVkLXBsYXllciIsImF1dGhlbnRpY2F0ZWQtdXNlciJdfSwiWndpZnQgWmVuZGVzayI6eyJyb2xlcyI6WyJhdXRoZW50aWNhdGVkLXVzZXIiXX0sIlp3aWZ0IFJlbGF5IFJFU1QgQVBJIC0tIHByb2R1Y3Rpb24iOnsicm9sZXMiOlsiYXV0aG9yaXplZC1wbGF5ZXIiXX0sImVjb20tc2VydmVyIjp7InJvbGVzIjpbImF1dGhlbnRpY2F0ZWQtdXNlciJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwibmFtZSI6IkhlbnJ5IEhvIHtNQlBDK0xGVEN9IiwicHJlZmVycmVkX3VzZXJuYW1lIjoiaGVucnl5cC5ob0BnbWFpbC5jb20iLCJnaXZlbl9uYW1lIjoiSGVucnkiLCJmYW1pbHlfbmFtZSI6IkhvIHtNQlBDK0xGVEN9IiwiZW1haWwiOiJoZW5yeXlwLmhvQGdtYWlsLmNvbSJ9.Pbpqjaps43loTXmB-l7bK18oM-1zbmnTcOWyyaYHluk8J5A_ekwQue8DaXu_lYdquLyLzAJa3PSarf5buxTN0NtOidUKVFxrcZMhjolNbsARLmf9gevTiyX25OFDE3BzC9t7SW4mgjB-zcaTpMrEYFKobGwYssfBZqlWbF3ixNGtOt2vsbtK87X9-7VvvVbSbU9P3iCunk4fSLK49lbYNXSpYORN7a9_MgmPLtsVLU5JG-ZrqGxG3FwhGnfmCDm7_wKf-Vhu6mxLyQNC-XeT4bjR0rpdQeEqlNUR1WtMRSEMIrpY0hkMjaVkXQeb3NaTrGZQaBTM-gulg0b5MaNrtQ';
-		next();
-	});
+	// app.use((req:express.Request, res: express.Response, next: express.NextFunction) => {
+	// 	req.session.zwift_access_token = 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJPLUVjXzJJNjg5bW9peGJIZzFfNDZDVFlGeEdZMDViaDluYm5Mcjl0RzY4In0.eyJqdGkiOiI1MDMzM2M4OS1kZjU2LTQ5NjctYWY4NC00ZGQxNzVkYjk5NDEiLCJleHAiOjE1ODcyNTYzMDcsIm5iZiI6MCwiaWF0IjoxNTg3MjM0NzA3LCJpc3MiOiJodHRwczovL3NlY3VyZS56d2lmdC5jb20vYXV0aC9yZWFsbXMvendpZnQiLCJhdWQiOiJad2lmdF9Nb2JpbGVfTGluayIsInN1YiI6ImJhNWEyZjc3LWY3ZGItNDdiMi1hOWE1LTUxOWY0YzViNDFkZSIsInR5cCI6IkJlYXJlciIsImF6cCI6Ilp3aWZ0X01vYmlsZV9MaW5rIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYTYxOWUxZjEtZDVkMC00OTJkLWFhMDUtMTVmMTcxYjZlMmZlIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6W10sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJldmVyeWJvZHkiLCJ0cmlhbC1zdWJzY3JpYmVyIiwiZXZlcnlvbmUiLCJiZXRhLXRlc3RlciJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImVtYWlsLXByZWZzLXNlcnZpY2UiOnsicm9sZXMiOlsiYXV0aGVudGljYXRlZC11c2VyIl19LCJteS16d2lmdCI6eyJyb2xlcyI6WyJhdXRoZW50aWNhdGVkLXVzZXIiXX0sIkdhbWVfTGF1bmNoZXIiOnsicm9sZXMiOlsiYXV0aGVudGljYXRlZC11c2VyIl19LCJzc28tZ2F0ZXdheSI6eyJyb2xlcyI6WyJhdXRoZW50aWNhdGVkLXVzZXIiXX0sInN1YnNjcmlwdGlvbi1zZXJ2aWNlIjp7InJvbGVzIjpbImF1dGhlbnRpY2F0ZWQtdXNlciJdfSwiWndpZnQgUkVTVCBBUEkgLS0gcHJvZHVjdGlvbiI6eyJyb2xlcyI6WyJhdXRob3JpemVkLXBsYXllciIsImF1dGhlbnRpY2F0ZWQtdXNlciJdfSwiWndpZnQgWmVuZGVzayI6eyJyb2xlcyI6WyJhdXRoZW50aWNhdGVkLXVzZXIiXX0sIlp3aWZ0IFJlbGF5IFJFU1QgQVBJIC0tIHByb2R1Y3Rpb24iOnsicm9sZXMiOlsiYXV0aG9yaXplZC1wbGF5ZXIiXX0sImVjb20tc2VydmVyIjp7InJvbGVzIjpbImF1dGhlbnRpY2F0ZWQtdXNlciJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwibmFtZSI6IkhlbnJ5IEhvIHtNQlBDK0xGVEN9IiwicHJlZmVycmVkX3VzZXJuYW1lIjoiaGVucnl5cC5ob0BnbWFpbC5jb20iLCJnaXZlbl9uYW1lIjoiSGVucnkiLCJmYW1pbHlfbmFtZSI6IkhvIHtNQlBDK0xGVEN9IiwiZW1haWwiOiJoZW5yeXlwLmhvQGdtYWlsLmNvbSJ9.Pbpqjaps43loTXmB-l7bK18oM-1zbmnTcOWyyaYHluk8J5A_ekwQue8DaXu_lYdquLyLzAJa3PSarf5buxTN0NtOidUKVFxrcZMhjolNbsARLmf9gevTiyX25OFDE3BzC9t7SW4mgjB-zcaTpMrEYFKobGwYssfBZqlWbF3ixNGtOt2vsbtK87X9-7VvvVbSbU9P3iCunk4fSLK49lbYNXSpYORN7a9_MgmPLtsVLU5JG-ZrqGxG3FwhGnfmCDm7_wKf-Vhu6mxLyQNC-XeT4bjR0rpdQeEqlNUR1WtMRSEMIrpY0hkMjaVkXQeb3NaTrGZQaBTM-gulg0b5MaNrtQ';
+	// 	next();
+	// });
 
-	if(isProdMode) {
-		// cron to get new access-token
-		zwiftService.refreshTokenLogin(refreshToken)
-		.then(res => {
-			access_token = res.access_token;
-			app.use((req:express.Request, res: express.Response) => {
-				req.session.zwift_access_token = access_token;
-				console.log('savedto session initial access token', access_token);
-			});
-			console.log('got initial access token', access_token);
-			getRelayWorldFeed(access_token)
-				.then(relayWorldData => RelayWorldModel.create(relayWorldData))
-				.then(() => { console.log('Added iniitial scheduled record') });
-		});
+	// if(isProdMode) {
+	// 	// cron to get new access-token
+	// 	zwiftService.refreshTokenLogin(refreshToken)
+	// 	.then(res => {
+	// 		access_token = res.access_token;
+	// 		app.use((req:express.Request, res: express.Response) => {
+	// 			req.session.zwift_access_token = access_token;
+	// 			console.log('savedto session initial access token', access_token);
+	// 		});
+	// 		console.log('got initial access token', access_token);
+	// 		getRelayWorldFeed(access_token)
+	// 			.then(relayWorldData => RelayWorldModel.create(relayWorldData))
+	// 			.then(() => { console.log('Added iniitial scheduled record') });
+	// 	});
 
-		scheduler.add(1, '*/15 * * * *', () => {
-			console.log(`new Base Schedule for access tokenstarted for every pattern ${'*/15 * * * *'}`);
-			zwiftService.refreshTokenLogin(refreshToken)
-				.then(res => {
-					access_token = res.access_token;
-				});
-		});
+	// 	scheduler.add(1, '*/15 * * * *', () => {
+	// 		console.log(`new Base Schedule for access tokenstarted for every pattern ${'*/15 * * * *'}`);
+	// 		zwiftService.refreshTokenLogin(refreshToken)
+	// 			.then(res => {
+	// 				access_token = res.access_token;
+	// 			});
+	// 	});
 
-		scheduler.add(2, '*/3 * * * *', () => {
-			console.log(`new Base Schedule started for every pattern ${'*/3 * * * *'}`);
-			getRelayWorldFeed(access_token)
-				.then(relayWorldData => RelayWorldModel.create(relayWorldData))
-				.then(() => { console.log('Added another scheduled record') });
-		});
-	}
+	// 	scheduler.add(2, '*/3 * * * *', () => {
+	// 		console.log(`new Base Schedule started for every pattern ${'*/3 * * * *'}`);
+	// 		getRelayWorldFeed(access_token)
+	// 			.then(relayWorldData => RelayWorldModel.create(relayWorldData))
+	// 			.then(() => { console.log('Added another scheduled record') });
+	// 	});
+	// }
 	// ------------------------------------------------------------
 
 
