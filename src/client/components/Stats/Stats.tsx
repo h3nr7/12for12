@@ -5,10 +5,9 @@ import { useEffect, useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import { Container, Card, CardContent, Grid, CardHeader, Typography, List, ListItem } from '@material-ui/core';
 import { ResponsiveScatterPlot } from '@nivo/scatterplot'
-import * as api from "../apis";
-import { eventsData } from '../data/12for12-events';
-import { playerData } from '../data/12for12-players';
-import { getLatestSavedFeed, getAggregatedFeed } from '../apis';
+import { eventsData } from '../../data/12for12-events';
+import { playerData } from '../../data/12for12-players';
+import { getLatestSavedFeed, getAggregatedFeed } from '../../apis';
 import { NODATA } from "dns";
 
 const CustomScatteredPlot = ({data}: {data: Array<any>}) => {
@@ -21,7 +20,6 @@ const CustomScatteredPlot = ({data}: {data: Array<any>}) => {
     }]
   }));
 
-  console.log(outData);
 
   return <ResponsiveScatterPlot
       data={outData}
@@ -101,7 +99,7 @@ const AggUserData: React.FunctionComponent = ({listen, children}: {listen:any, c
 }
 
 
-class HomeComponent extends React.Component<{}> {
+class StatsComponent extends React.Component<{}> {
 
     render() {
   
@@ -200,4 +198,4 @@ class HomeComponent extends React.Component<{}> {
 
 }
 
-export const Home = hot(module)(HomeComponent);
+export const Stats = hot(module)(StatsComponent);

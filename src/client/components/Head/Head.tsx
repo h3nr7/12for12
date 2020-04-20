@@ -1,8 +1,9 @@
 import * as React from "react";
 import { hot } from "react-hot-loader";
 import { makeStyles } from '@material-ui/core/styles';
-import { IconButton, Toolbar, Typography, AppBar, Button } from '@material-ui/core';
+import { IconButton, Typography, Button } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import { AppBar, Toolbar } from './Head.styles';
 
 const useStyles = makeStyles((theme) => ({
     root: {

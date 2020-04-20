@@ -84,11 +84,6 @@ module.exports = {
                 ]
             },
             {
-                test: /\.(scss|css)$/,
-                loaders: ["style-loader", "css-loader"],
-                include: [/** paths to node_module or external css */]          
-            },
-            {
                 test: /\.(jpe?g|gif|png|svg)$/i,
                 loader: "url-loader?limit=10000",
             },

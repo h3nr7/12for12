@@ -5,6 +5,11 @@ const paths = require('./paths');
 
 module.exports = {
     mode: "production",
+    performance: {
+        // set warning of bundle and assets size to about 1.5MB
+        maxEntrypointSize: 1512000,
+        maxAssetSize: 1512000
+    },
     entry: [
         'babel-polyfill',
         paths.entryPointIndexTsx
@@ -51,11 +56,6 @@ module.exports = {
                 enforce: "pre",
                 test: /\.js$/,
                 loader: "source-map-loader"
-            },
-            {
-                test: /\.css$/,
-                // include: [ paths.semanticUiCssFolder ],
-                loaders: ["style-loader", "css-loader"],
             },
             {
                 test: /\.(jpe?g|gif|png|svg)$/i,
