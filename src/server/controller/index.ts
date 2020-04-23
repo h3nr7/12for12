@@ -7,6 +7,7 @@ import { authController } from "./auth.controller";
 import { usersController } from "./users.controller";
 import { eventsController } from './events.controller';
 import { relayworldController } from './relay-world.controller';
+import { finalEventController } from './finalEvent.controller';
 
 /**
  * REGISTER CONTROLLER TO PATHS
@@ -20,6 +21,7 @@ export function registerRoutes(app: express.Application): void {
     app.use("/api/users", usersController);
     app.use("/api/events", eventsController);
     app.use("/api/relay", relayworldController);
+    app.use("/api/event12for12", finalEventController);
 
     /** static routing */
     app.use("/dist", express.static(path.join(__dirname, "..", "dist")));

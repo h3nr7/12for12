@@ -35,6 +35,17 @@ relayworldController.get("/saved/feed", async (req: express.Request, res: expres
     }
 });
 
+// relayworldController.get("/agreggated/feed", async (req: express.Request, res: express.Response) => {
+
+//     try {
+
+//     } catch(e) {
+        
+//     }
+// });
+
+
+/** get temp on the day data */
 relayworldController.get("/agreggated/feed", async (req: express.Request, res: express.Response) => {
 
     try {

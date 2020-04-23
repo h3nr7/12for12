@@ -2,6 +2,7 @@
 import * as express from "express";
 import { findUserSelf, findUser, getUserCyclingStats } from "../service/zwift.service";
 import { User, Users } from "../model/user.interface";
+import { stat } from "fs";
 
 /** Router Definition */
 export const usersController = express.Router();
@@ -30,6 +31,31 @@ usersController.get("/:id", async (req: express.Request, res: express.Response) 
     }
 });
 
+// Get a list of user stats
+usersController.put("/list/stats", async (req: express.Request, res: express.Response) => {
+    try {
+        const token: string = req.body.token;
+        const userIds:[] = req.body.userIds;
+        const startDateTime:string = encodeURI(String(req.query.startDateTime));
+        const endDateTime:string = encodeURI(String(req.query.endDateTime));
+        const usersStats = await Promise.all(userIds.map(async (userId: number & string) => {
+            const user: User = await findUser(token, userId);
+            const { 
+                id, firstName, lastName, male, imageSrc, 
+                playerTypeId, ftp, totalDistance, totalDistanceClimbed, totalTimeInMinutes } = user;
+            let uStats = await getUserCyclingStats(token, userId, startDateTime, endDateTime);
+            return {
+                id, firstName, lastName, male, imageSrc, 
+                playerTypeId, ftp, totalDistance, totalDistanceClimbed, totalTimeInMinutes,
+                aggregatedStats: {startDateTime, endDateTime, ...uStats}
+            };
+        }));
+        res.status(200).send(usersStats);
+    } catch(e) {
+        res.status(400).send(e.message);
+    }
+});
+
 // get user stats by id
 usersController.put("/:id/stats", async (req: express.Request, res: express.Response) => {
     try {
@@ -43,6 +69,7 @@ usersController.put("/:id/stats", async (req: express.Request, res: express.Resp
         res.status(400).send(e.message);
     }
 });
+
 
 // GET users/followers
 usersController.get("/:id/followers", async (req: express.Request, res: express.Response) => {

@@ -1,196 +1,4 @@
-/** Data Model Interfaces */
-import { Event, Events } from "../model/event.interface";
-import { User, Users } from "../model/user.interface";
-import { RelayWorld } from "../model/relay-world.interface";
-import { ZwiftAuthResponse, ZwiftHeaders, ModifiedResponse } from "./zwift.interface";
-import * as axios from 'axios';
-import * as qs from "querystring";
-import { response } from "express";
-
-
-/**
- * VARS
- */
-const ZWIFT_SECURE_URL = process.env.ZWIFT_API_SECURE_URL;
-const ZWFIT_URL = process.env.ZWIFT_API_URL;
-
-
-/**
- * SET REQUEST HEADERS
- */
-//  default Set Zwift Headers
-const zwiftHeaders: ZwiftHeaders = {
-    "Host": "us-or-rly101.zwift.com",
-    "Connection": "keep-alive",
-    "Zwift-Api-Version": "2.6",
-    "Accept-Language": "en-GB",
-    "Accept-Encoding": "gzip, deflate, br"
-}
-
-// set zwift headers with token
-const setZwiftHeaderWithToken = (token: string): ZwiftHeaders => ({
-    ...zwiftHeaders,
-    "Accept": "application/json",
-    "Authorization": `Bearer ${token}`
-});
-
-// set zwift auth header
-const zwiftAuthHeaders: ZwiftHeaders = {
-    ...zwiftHeaders,
-    "Host": "secure.zwift.com",
-    "Content-Type": "application/x-www-form-urlencoded",
-    "User-Agent": "Zwift Companion/3.12.1 (iPhone; iOS 13.3.1; Scale/3.00)",
-    "Accept": "*/*"
-}
-
-/**
- * RESPONSE MODIFIER
- */
-// single document responst modifier
-const responseModifier = (response: axios.AxiosResponse): Promise<ModifiedResponse> => {
-    return Promise.resolve({
-        statusCode: response.status,
-        statusText: response.statusText,
-        data: {...response.data}
-    });
-};
-
-// Modify array response into Key, Value Objects
-const arrayResponseModifier = (response: axios.AxiosResponse): Promise<ModifiedResponse> => {
-    return Promise.resolve({
-        statusCode: response.status,
-        statusText: response.statusText,
-        data: Object.assign({}, ...response.data.map((obj: any) => ({[obj.id]: obj})))
-    });
-};
-
-/** log zwift error */
-const logZwiftError = (err: Error): Promise<any> => {
-    console.error('Zwift error', err);
-    return Promise.reject(err);
-}
-
-/** handle and return response data only */
-const responseHandler = (res: any): Users & User & Events & Event => {
-    return res.data;
-}
-
-/**
- * SERVICE FUNCTIONS
- */
-// Login by username and password
-export const emailLogin = async (email: string, password: string): Promise<ZwiftAuthResponse> => {
-    const requestBody: qs.ParsedUrlQueryInput = {
-        "client_id": "Zwift_Mobile_Link",
-        "grant_type": "password",
-        "username": email,
-        "password": password
-    };
-    return axios.default.post(
-        `${ZWIFT_SECURE_URL}/auth/realms/zwift/protocol/openid-connect/token`,
-        qs.stringify(requestBody),
-        { headers: zwiftAuthHeaders }
-    )
-    .then(responseModifier)
-    .catch(logZwiftError)
-    .then(res =>  Promise.resolve({...res.data}));
-}
-
-// login by refresh token
-export const refreshTokenLogin = async (refreshToken: string): Promise<ZwiftAuthResponse> => {
-    const requestBody: qs.ParsedUrlQueryInput = {
-        "client_id": "Zwift_Mobile_Link",
-        "grant_type": "refresh_token",
-        "refresh_token": refreshToken
-    };
-
-    return axios.default.post(
-        `${ZWIFT_SECURE_URL}/auth/realms/zwift/protocol/openid-connect/token`, 
-        qs.stringify(requestBody),
-        { headers: zwiftAuthHeaders }
-    )
-    .then(responseModifier)
-    .catch(logZwiftError)
-    .then(res => Promise.resolve({...res.data}));
-}
-
-// Find a user by profile id
-export const findUser = async (token: string, uid: string): Promise<User> => {
-    return axios.default.get(`${ZWFIT_URL}/api/profiles/${uid}`, {
-        headers: setZwiftHeaderWithToken(token)
-    })
-    .then(responseModifier)
-    .catch(logZwiftError)
-    .then(responseHandler);
-}
-
-// Find self
-export const findUserSelf = async (token: string): Promise<User> => {
-    return axios.default.get(`${ZWFIT_URL}/api/profiles/me`, {
-        headers: setZwiftHeaderWithToken(token)
-    })
-    .then(responseModifier)
-    .catch(logZwiftError)
-    .then(responseHandler);
-}
-
-// Get User Stats by start and end datetime
-export const getUserCyclingStats = async (token: string, uid: number, startDateTime:string, endDateTime: string): Promise<any> => {
-    return axios.default.get(`${ZWFIT_URL}/api/profiles/${uid}/statistics`, {
-        headers: setZwiftHeaderWithToken(token),
-        params: {
-            startDateTime,
-            endDateTime,
-            sport: "CYCLING"
-        }
-    })
-    .then(responseModifier)
-    .catch(logZwiftError)
-    .then(responseHandler);
-}
-
-// get event by start and end timestamp
-export const findEventsByTimeRange = async (
-   token: string, 
-   startTimestamp: number, 
-   endTimestamp: number
-): Promise<Events> => {
-       const params = {
-           "start_date": startTimestamp,
-           "end_date": endTimestamp,
-       };
-       return axios.default.get(
-           `${ZWFIT_URL}/api/private_event/feed`, 
-           { 
-               headers: setZwiftHeaderWithToken(token),
-               params
-           }
-       )
-       .then(arrayResponseModifier)
-       .catch(logZwiftError)
-       .then(responseHandler);
-   }
-
-// get event with details
-export const getBulkEventDetails = async (
-   token: string,
-   events: []
-): Promise<Events> => {
-   return Promise.all(events.map(async (eventId: number): Promise<Event> => (
-      axios.default.get(
-         `${ZWFIT_URL}/api/private_event/${eventId}`, 
-         { headers: setZwiftHeaderWithToken(token) }
-      )
-      .then(responseHandler)
-      .catch(logZwiftError)
-   )));
-}
-
-
-
-// --------------------------------------------------------------------------------
-// TEMP MEASURES ON EVENT DAY
-const playerData: any = {
+{
    "11993":{
       "id":11993,
       "firstName":"Dee",
@@ -245,6 +53,20 @@ const playerData: any = {
       "socialFacts":{
          "followerStatusOfLoggedInPlayer":"IS_FOLLOWING",
          "isFavoriteOfLoggedInPlayer":true
+      }
+   },
+   "383885":{
+      "id":383885,
+      "firstName":"Simon",
+      "lastName":"Needle (Team OA)",
+      "imageSrc":"https://static-cdn.zwift.com/prod/profile/79c0d36c-209669",
+      "enrolledZwiftAcademy":false,
+      "male":true,
+      "playerType":"NORMAL",
+      "countryCode":826,
+      "socialFacts":{
+         "followerStatusOfLoggedInPlayer":"NO_RELATIONSHIP",
+         "isFavoriteOfLoggedInPlayer":false
       }
    },
    "420683":{
@@ -377,11 +199,25 @@ const playerData: any = {
       "id":974389,
       "firstName":"Caleb",
       "lastName":"K [LFTC]",
-      "imageSrc":"https://static-cdn.zwift.com/prod/profile/8fce68a4-685557",
+      "imageSrc":"https://static-cdn.zwift.com/prod/profile/2cacf347-685557",
       "enrolledZwiftAcademy":false,
       "male":true,
       "playerType":"NORMAL",
       "countryCode":554,
+      "socialFacts":{
+         "followerStatusOfLoggedInPlayer":"IS_FOLLOWING",
+         "isFavoriteOfLoggedInPlayer":false
+      }
+   },
+   "1000462":{
+      "id":1000462,
+      "firstName":"Rebecca",
+      "lastName":"Wakeford",
+      "imageSrc":null,
+      "enrolledZwiftAcademy":false,
+      "male":false,
+      "playerType":"NORMAL",
+      "countryCode":826,
       "socialFacts":{
          "followerStatusOfLoggedInPlayer":"IS_FOLLOWING",
          "isFavoriteOfLoggedInPlayer":false
@@ -404,7 +240,7 @@ const playerData: any = {
    "1041509":{
       "id":1041509,
       "firstName":"Alejandro",
-      "lastName":"Romero LFTC",
+      "lastName":"Romero [LFTC]",
       "imageSrc":"https://static-cdn.zwift.com/prod/profile/07fde0f1-536745",
       "enrolledZwiftAcademy":false,
       "male":true,
@@ -573,7 +409,7 @@ const playerData: any = {
       "id":1554202,
       "firstName":"Alex",
       "lastName":"Proy [RCC][LFTC]",
-      "imageSrc":"https://static-cdn.zwift.com/prod/profile/0112d043-808423",
+      "imageSrc":"https://static-cdn.zwift.com/prod/profile/757473e4-808423",
       "enrolledZwiftAcademy":false,
       "male":true,
       "playerType":"NORMAL",
@@ -698,7 +534,7 @@ const playerData: any = {
    "2145512":{
       "id":2145512,
       "firstName":"chris",
-      "lastName":"Xenos",
+      "lastName":"Xenos (LFTC)",
       "imageSrc":null,
       "enrolledZwiftAcademy":false,
       "male":true,
@@ -719,7 +555,7 @@ const playerData: any = {
       "playerType":"NORMAL",
       "countryCode":826,
       "socialFacts":{
-         "followerStatusOfLoggedInPlayer":"NO_RELATIONSHIP",
+         "followerStatusOfLoggedInPlayer":"IS_FOLLOWING",
          "isFavoriteOfLoggedInPlayer":false
       }
    },
@@ -727,7 +563,7 @@ const playerData: any = {
       "id":2294281,
       "firstName":"Michelle",
       "lastName":"Lovick (LFTC)",
-      "imageSrc":"https://static-cdn.zwift.com/prod/profile/4eabbb39-1230086",
+      "imageSrc":"https://static-cdn.zwift.com/prod/profile/3ea44eeb-1230086",
       "enrolledZwiftAcademy":false,
       "male":false,
       "playerType":"NORMAL",
@@ -750,41 +586,33 @@ const playerData: any = {
          "followerStatusOfLoggedInPlayer":"IS_FOLLOWING",
          "isFavoriteOfLoggedInPlayer":false
       }
+   },
+   "2297991":{
+      "id":2297991,
+      "firstName":"Mary",
+      "lastName":"Carr",
+      "imageSrc":"https://static-cdn.zwift.com/prod/profile/c695cf64-1232865",
+      "enrolledZwiftAcademy":false,
+      "male":false,
+      "playerType":"NORMAL",
+      "countryCode":826,
+      "socialFacts":{
+         "followerStatusOfLoggedInPlayer":"NO_RELATIONSHIP",
+         "isFavoriteOfLoggedInPlayer":false
+      }
+   },
+   "2306448":{
+      "id":2306448,
+      "firstName":"Peter",
+      "lastName":"Kun [LFTC]",
+      "imageSrc":"https://static-cdn.zwift.com/prod/profile/0c810ce9-1238200",
+      "enrolledZwiftAcademy":false,
+      "male":true,
+      "playerType":"NORMAL",
+      "countryCode":348,
+      "socialFacts":{
+         "followerStatusOfLoggedInPlayer":"IS_FOLLOWING",
+         "isFavoriteOfLoggedInPlayer":false
+      }
    }
-};
-
-const relayWorldResponseHandler = (res: any): RelayWorld => {
-
-   const { friendsInWorld, ...data } = res.data;
-   let counter = 0;
-   const modifiedVer = friendsInWorld.reduce((prev: any, next: any) => {
-       if(!prev) {
-           if(!playerData[prev.playerId]) prev = {};
-           else {
-              prev = { [prev.playerId]: { id: prev.playerId,  ...prev } };
-              counter++;
-           }
-       }
-       if(playerData[next.playerId]) {
-          prev = { ...prev, [next.playerId]: { id: next.playerId,  ...next } };
-          counter++;
-       }
-       return prev;
-   }, {});
-
-   return { ...data, friendsInWorld: modifiedVer, playerCount: counter };
-
 }
-
-// get relay world feed with saved players
-export const getRelayWorldFeed = async (token: string): Promise<any> => {
-
-    return axios.default.get(`${ZWFIT_URL}/relay/worlds/1`, {
-        headers: setZwiftHeaderWithToken(token)
-    })
-    .then(responseModifier)
-    .catch(logZwiftError)
-    .then(relayWorldResponseHandler);
-
-}
-// --------------------------------------------------------------------------------
