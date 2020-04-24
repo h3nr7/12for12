@@ -11,11 +11,12 @@
 		"typeRoots": ["node_mdules/@types", "./src/shared/typings"]
 	},
 	"include": [
-		"./src/**/*"
+		"./src/**/*",
+		"./src/shared/typings/**/*.d.ts"
 	],
 	"exclude": [
 		"node_modules",
-		"./src/shared/typings",
+		// "./src/shared/typings",
 		"**/*.spec.ts"
 	]
 	

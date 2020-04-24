@@ -18,6 +18,7 @@
     },
     "include": [
       "./**/*",
+      "../shared/typings/**/*.d.ts",
       "../webpack",
     ],
     "exclude": [

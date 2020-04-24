@@ -1,19 +1,6 @@
-import * as React from 'react';
-import { IRandomDigitor } from './RandomDigitor.interface';
-import { hot } from 'react-hot-loader';
-import { Grid } from '@material-ui/core';
+import styled from 'styled-components';
 
-const RandomDigitorComp:React. FunctionComponent = (props:{ numDisplay: string }={numDisplay:''}) => {
-
-    return (
-        <Grid container>
-            <Grid item xs={2}></Grid>
-            <Grid item xs={8}>
-                adsf
-            </Grid>
-            <Grid item xs={2}></Grid>
-        </Grid>
-    );
-}
-
-export const RandomDigitor = hot(module)(RandomDigitorComp);
+export const Heading = styled.h1`
+    font-weight: normal;
+    font-style: italic;
+`;

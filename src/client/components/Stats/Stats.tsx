@@ -68,7 +68,7 @@ const CustomScatteredPlot = ({data}: {data: Array<any>}) => {
             ]
         }
     ]}
-    nodeSize={nDat=>{
+    nodeSize={(nDat:{x:number, y:number})=>{
       return Math.random() * Math.max(1, Number(nDat.y)/250) * Math.exp(0.00065*Number(nDat.x)/Number(nDat.y)) * Math.exp(0.006*Number(nDat.x)/Number(nDat.y));
     }}
    />

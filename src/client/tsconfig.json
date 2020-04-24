@@ -17,6 +17,10 @@
             "../shared/typings"
         ]
     },
+    "include": [
+        "./**/*.*",
+        "../shared/typings/**/*.d.ts"
+    ],
     "exclude": [
       "node_modules",
       "build",
