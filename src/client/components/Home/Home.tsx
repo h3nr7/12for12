@@ -8,7 +8,7 @@ import {
     RootContainer, HeroContainer, 
     HeroHeading, JustGivingContainer, 
     DataContainer 
-} from './home.styles';
+} from './Home.styles';
 import { getAggStats,getPlayers, getCrowdfundingDetails } from '../../apis';
 import Gallery from 'react-photo-gallery';
 import Carousel, { Modal, ModalGateway } from "react-images";
