@@ -120,17 +120,17 @@ const HomeComponent: React.FunctionComponent = () => {
                 <HeroHeading>Thanks to your support.  We have raised<br/>
                     a total of &pound;<RandomDigitor 
                     value={Number(crowdfundDetails.amountRaised)}
-                    delay={0} 
+                    delay={1500} 
                     duration={3000} />, ridden <RandomDigitor 
                     value={Math.round(aggData.aggTotDistanceInMeters/1000)}
-                    delay={2500} 
+                    delay={4000} 
                     duration={3000} />km,<br/>
                     climbed <RandomDigitor 
                     value={Math.round(aggData.aggTotHeightInMeters)}
-                    delay={5000} 
+                    delay={6500} 
                     duration={3000} />m and burnt <RandomDigitor 
                     value={Math.round(aggData.aggTotCaloriesBurnt)}
-                    delay={7500} 
+                    delay={9000} 
                     duration={3000} /> calories<br/>
                     to support Masks for NHS Heroes.
                 </HeroHeading>
