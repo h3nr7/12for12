@@ -2,7 +2,7 @@ import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import { makeStyles } from '@material-ui/core/styles';
 import { Parallax } from 'react-scroll-parallax';
-import { IHome } from './home.interface';
+import { IHome } from './Home.interface';
 import { Grid, Button } from '@material-ui/core';
 import { 
     RootContainer, HeroContainer, 
