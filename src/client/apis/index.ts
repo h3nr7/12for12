@@ -20,3 +20,29 @@ export const getLatestSavedFeed = async () => {
     const res = await axios.default.get("/api/relay/saved/feed");
     return res.data;
 }
+
+/** GET PLAYERS */
+export const getPlayers = async () => {
+    const res = await axios.default.get("/api/event12for12/players");
+    return res.data;
+}
+
+/** GET AGG RESULTS */
+export const getAggStats = async ({agreedToShare}: any) => {
+    let params:any = {};
+    if(agreedToShare) params.agreedToShare = agreedToShare;
+    const res = await axios.default.get("/api/event12for12/results/agg", {
+        params
+    });
+    return res.data;
+}
+
+export const getCrowdfundingDetails = async () => {
+    let headers:{} = {
+        Accept: "application/json"
+    };
+    const res = await axios.default.get("https://api.justgiving.com/a2cca337/v1/crowdfunding/pages/lftc12-for-12-challenge", {
+        headers
+    });
+    return res.data;
+}

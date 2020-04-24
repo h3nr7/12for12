@@ -4,7 +4,9 @@ import Container from '@material-ui/core/Container';
 
 const FootComponent: React.StatelessComponent<{}> = (props) => {
     return (
-    <Container>{props.children}</Container>
+    <div>
+        <Container>Something {props.children}</Container>
+    </div>
     );
 }
 

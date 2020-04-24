@@ -28,7 +28,7 @@ const HeadComponent: React.StatelessComponent<{}> = (props) => {
                     <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6">LFTC 12 for 12 :: Masks for NHS Heroes</Typography>
+                    {/* <Typography variant="h6">LFTC 12 for 12 :: Masks for NHS Heroes</Typography> */}
                     {/* <Button color="inherit">Login</Button> */}
                     {props.children}
                 </Toolbar>

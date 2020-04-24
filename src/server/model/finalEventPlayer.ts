@@ -26,7 +26,8 @@ export const finalEventPlayerSchema = new mongoose.Schema({
     totalDistanceClimbed: Number,
     totalTimeInMinutes: Number,
     aggregatedStats: playerAggStatsSchema,
-    isAgreedToShare: Boolean
+    isAgreedToShare: Boolean,
+    isNonZwift: Boolean
 });
 
 finalEventPlayerSchema.plugin(mongoosePagination);

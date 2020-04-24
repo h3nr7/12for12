@@ -10,16 +10,17 @@ export interface PlayerAggStats {
 
 }
 export interface FinalEventPlayer {
-    id: number,
+    id?: number,
     firstName: string,
     lastName: string,
     male: boolean,
-    imageSrc: string,
-    playerTypeId: number,
-    ftp: number,
-    totalDistance: number,
-    totalDistanceClimbed: number,
-    totalTimeInMinutes: number,
+    imageSrc?: string,
+    playerTypeId?: number,
+    ftp?: number,
+    totalDistance?: number,
+    totalDistanceClimbed?: number,
+    totalTimeInMinutes?: number,
     aggregatedStats: PlayerAggStats,
+    isNonZwift?: boolean,
     isAgreed: boolean
 }

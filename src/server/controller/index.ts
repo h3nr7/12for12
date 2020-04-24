@@ -8,6 +8,7 @@ import { usersController } from "./users.controller";
 import { eventsController } from './events.controller';
 import { relayworldController } from './relay-world.controller';
 import { finalEventController } from './finalEvent.controller';
+import { foodController } from './food.controller';
 
 /**
  * REGISTER CONTROLLER TO PATHS
@@ -20,6 +21,7 @@ export function registerRoutes(app: express.Application): void {
     app.use("/auth", authController);
     app.use("/api/users", usersController);
     app.use("/api/events", eventsController);
+    app.use('/api/food', foodController);
     app.use("/api/relay", relayworldController);
     app.use("/api/event12for12", finalEventController);
 
