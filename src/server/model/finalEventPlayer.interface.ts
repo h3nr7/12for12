@@ -1,5 +1,3 @@
-import { IPaginateResult } from 'mongoose';
-
 export interface PlayerAggStats {
     startDateTime: string,
     endDateTime: string,

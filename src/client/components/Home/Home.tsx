@@ -1,52 +1,16 @@
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
-import { makeStyles } from '@material-ui/core/styles';
-import { Parallax } from 'react-scroll-parallax';
 import { IHome } from './Home.interface';
 import { Grid, Button } from '@material-ui/core';
 import { 
-    RootContainer, HeroContainer, 
-    HeroHeading, JustGivingContainer, 
+    RootContainer, 
+    JustGivingContainer, 
     DataContainer 
 } from './Home.styles';
-import { getAggStats,getPlayers, getCrowdfundingDetails } from '../../apis';
 import Gallery from 'react-photo-gallery';
 import Carousel, { Modal, ModalGateway } from "react-images";
-import * as IGEmbed from 'react-instagram-embed';
-import { RandomDigitor } from '../RandomDigitor/RandomDigitor';
 import { photoSrc } from './photos';
-import { callbackify } from 'util';
-
-const useStyles = makeStyles((theme) => ({
-    donateBut: {
-        marginTop: 20,
-        width: '60%',
-        marginBottom: 30,
-        background: '#fc035e',
-        [theme.breakpoints.down('xs')]: {
-            margin: '30px 20%'
-        }
-    },
-    pl1: {
-        position: 'relative',
-        top: 0,
-        width: 'auto',
-        [theme.breakpoints.down('xs')]: {
-            height: 600
-        }
-    },
-    pl2: {
-        position: 'absolute',
-        top: 0,
-        left: 30,
-        textAlign: 'left',
-        width: 'auto',
-        [theme.breakpoints.down('xs')]: {
-            top: -100,
-            left: 20,
-        }
-    }
-}));
+import { useStyles } from './Home.styles';
 
 const HomeComponent: React.FunctionComponent = () => {
 
@@ -65,76 +29,12 @@ const HomeComponent: React.FunctionComponent = () => {
 
     const classes = useStyles();
 
-    const [aggData, setAggData] = React.useState<IHome | null>({
-        aggPlayers: 0,
-        aggTotDistanceInMeters: 0,
-        aggTotHeightInMeters: 0,
-        aggTotTimeInMinutes: 0,
-        aggTotCaloriesBurnt: 0,
-        foodEarned: []
-    });
-    React.useEffect(() => {
-        (async () => {
-            const data = await getAggStats({});
-            setAggData(data);
-        })();
-    }, []);
-
-    const [players, setPlayers] = React.useState({
-        data: [],
-        pagination: {}
-    });
-    React.useEffect(() => {
-        (async () => {
-            const data = await getPlayers();
-            setPlayers(data);
-        })();
-    }, []);
-
-    const [crowdfundDetails, setCrowdfundDetails] = React.useState({
-        amountRaised: 0,
-        story: {
-            problem: ''
-        }
-    });
-    React.useEffect(() => {
-        (async () => {
-            const data = await getCrowdfundingDetails();
-            setCrowdfundDetails(data);
-        })();
-    });
-
     const onClickHandler = () => {
         window.open('https://www.justgiving.com/crowdfunding/lftc12-for-12-challenge', '_blank');
     }
 
-
     return (
         <RootContainer>
-            <Parallax className={classes.pl1}>
-                <HeroContainer>  
-                    
-                </HeroContainer>
-            </Parallax>
-            <Parallax y={[400, 0]} className={classes.pl2}>
-                <HeroHeading>Thanks to your support.  We have raised<br/>
-                    a total of &pound;<RandomDigitor 
-                    value={Number(crowdfundDetails.amountRaised)}
-                    delay={1500} 
-                    duration={3000} />, ridden <RandomDigitor 
-                    value={Math.round(aggData.aggTotDistanceInMeters/1000)}
-                    delay={4000} 
-                    duration={3000} />km,<br/>
-                    climbed <RandomDigitor 
-                    value={Math.round(aggData.aggTotHeightInMeters)}
-                    delay={6500} 
-                    duration={3000} />m and burnt <RandomDigitor 
-                    value={Math.round(aggData.aggTotCaloriesBurnt)}
-                    delay={9000} 
-                    duration={3000} /> calories<br/>
-                    to support Masks for NHS Heroes.
-                </HeroHeading>
-            </Parallax>
             <JustGivingContainer>
                 <Grid container spacing={4}>
                     <Grid item xs={12} sm={5} md={4}>
@@ -167,10 +67,6 @@ const HomeComponent: React.FunctionComponent = () => {
                             onClick={openLightBox}
                             photos={photoSrc}/>
                     </Grid>
-                    {/* <Grid item xs={12} sm={7} md={8}>
-                        <IGEmbed 
-                            url=''/>
-                    </Grid> */}
                 </Grid>
                 <ModalGateway>
                     {isViewOpen ? (

@@ -28,9 +28,7 @@ export const getPlayers = async () => {
 }
 
 /** GET AGG RESULTS */
-export const getAggStats = async ({agreedToShare}: any) => {
-    let params:any = {};
-    if(agreedToShare) params.agreedToShare = agreedToShare;
+export const getAggStats = async (params:{agreedToShare?:boolean}={}) => {
     const res = await axios.default.get("/api/event12for12/results/agg", {
         params
     });

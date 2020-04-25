@@ -24,19 +24,23 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const HeadComponent: React.StatelessComponent<IHead> = (props) => {
+const HeadComponent: React.StatelessComponent<IHead> = ({isInvertMenu, onMenuClick, children}) => {
 
     const classes = useStyles();
     return (
         <div className={classes.root}>
             <AppBar color="default">
                 <Toolbar>
-                    <IconButton edge="start" className={props.isInvertMenu ? classes.menuButton : classes.menuButtonInvert} aria-label="menu">
+                    <IconButton 
+                        onClick={onMenuClick}
+                        edge="start" 
+                        className={isInvertMenu ? classes.menuButton : classes.menuButtonInvert} 
+                        aria-label="menu">
                         <MenuIcon />
                     </IconButton>
                     {/* <Typography variant="h6">LFTC 12 for 12 :: Masks for NHS Heroes</Typography> */}
                     {/* <Button color="inherit">Login</Button> */}
-                    {props.children}
+                    {children}
                 </Toolbar>
             </AppBar>
         </div>

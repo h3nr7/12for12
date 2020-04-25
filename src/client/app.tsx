@@ -1,44 +1,107 @@
 import * as React from "react";
 import { hot } from "react-hot-loader";
-import Container from '@material-ui/core/Container';
-import { Link } from "react-router-dom";
+import { Parallax } from 'react-scroll-parallax';
+
+import { IApp } from './app.interface';
 import { Head } from './components/Head/Head';
 import { Foot } from './components/Foot/Foot';
 import { makeStyles } from '@material-ui/core/styles';
-import { Heading } from './app.styles';
+import { HeroContainer, HeroHeading,
+    MenuLink as Link, MenuItem as ListItem,
+    useStyles
+} from './app.styles';
+import { Drawer, List, Typography } from "@material-ui/core";
+import { RandomDigitor } from './components/RandomDigitor/RandomDigitor';
+import { getAggStats, getCrowdfundingDetails } from './apis';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        maxWidth: 1920,
-        minWidth: 600,
-        margin: '0 auto',
-        [theme.breakpoints.down('sm')]: {
-            minWidth: 'auto'
-        }
-    },
-    menuButton: {
-        // marginRight: theme.spacing(2)
-    },
-    container: {
-        margin: 0,
-        padding: 0
-    },
-    title: {
-        flexGrow: 1
-    }
-}));
 
 const AppComponent: React.StatelessComponent<{}> = (props) => {
 
     const classes = useStyles();
 
+    const [crowdfundDetails, setCrowdfundDetails] = React.useState({
+        id: null,
+        amountRaised: 0,
+        story: null
+    });
+    React.useEffect(() => {
+        (async () => {
+            const data = await getCrowdfundingDetails();
+            setCrowdfundDetails(data);
+        })();
+    }, [crowdfundDetails.id]);
+
+    const [aggData, setAggData] = React.useState<IApp | null>({
+        aggPlayers: 0,
+        aggTotDistanceInMeters: 0,
+        aggTotHeightInMeters: 0,
+        aggTotTimeInMinutes: 0,
+        aggTotCaloriesBurnt: 0,
+        foodEarned: []
+    });
+    React.useEffect(() => {
+        (async () => {
+            const data = await getAggStats(null);
+            setAggData(data);
+        })();
+    }, [aggData.aggPlayers]);
+
+    const [ isDrawerOpen, setIsDrawerOpen ] = React.useState(false);
+
+    const menuClickHandler = (event: any) => {
+        setIsDrawerOpen(!isDrawerOpen);
+    }
+
     return (
         <div className={classes.root}>
-            <Head isInvertMenu={true} />
-            <div className={classes.container}>
-                { props.children }
+            <Drawer 
+                onClose={() => setIsDrawerOpen(false)}
+                open={isDrawerOpen}>
+                <List className={classes.menu}>
+                    <ListItem variant='h6'>
+                        <Link to='/'>Home</Link>
+                    </ListItem>
+                    <ListItem variant='h6'>
+                        <Link to='/organisers'>Organisers</Link>
+                    </ListItem>
+                    <ListItem variant='h6'>
+                        <Link to='/participants'>Participants</Link>
+                    </ListItem>
+                    <ListItem variant='h6'>
+                        <Link to='/media'>Media</Link>
+                    </ListItem>
+
+                </List>
+            </Drawer>
+            <div className={isDrawerOpen ? classes.contentShift : classes.content}>
+                <Head isInvertMenu={true} onMenuClick={menuClickHandler} />
+                <div className={classes.container}>
+                    <Parallax className={classes.pl1}>
+                        <HeroContainer />
+                    </Parallax>
+                    <Parallax y={[400, 0]} className={classes.pl2}>
+                        <HeroHeading>Thanks to your support.  We have raised<br/>
+                            a total of &pound;<RandomDigitor 
+                            value={Number(crowdfundDetails.amountRaised)}
+                            delay={0} 
+                            duration={3000} />, ridden <RandomDigitor 
+                            value={Math.round(aggData.aggTotDistanceInMeters/1000)}
+                            delay={2500} 
+                            duration={3000} />km,<br/>
+                            climbed <RandomDigitor 
+                            value={Math.round(aggData.aggTotHeightInMeters)}
+                            delay={5000} 
+                            duration={3000} />m and burnt <RandomDigitor 
+                            value={Math.round(aggData.aggTotCaloriesBurnt)}
+                            delay={7500} 
+                            duration={3000} /> calories<br/>
+                            to support Masks for NHS Heroes.
+                        </HeroHeading>
+                    </Parallax>
+                    { props.children }
+                </div>
+                <Foot />
             </div>
-            <Foot />
         </div>
     );
 };

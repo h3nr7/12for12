@@ -29,8 +29,6 @@ import { registerRoutes } from './controller/index';
 const isDevMode: boolean = process.env.NODE_ENV === "development" || false;
 const isProdMode: boolean = process.env.NODE_ENV === "production" || false;
 
-import { errorHandler } from './middleware/error.middleware';
-import { notFoundHandler } from './middleware/notFound.middleware';
 import * as passportConfig from './config/passport';
 
 
@@ -142,9 +140,6 @@ export function createApp(logfilePath: string): express.Application {
 
 
 	registerRoutes(app);
-
-	app.use(errorHandler);
-	app.use(notFoundHandler);
 
 	return app;
 }
