@@ -12,8 +12,7 @@ import { HeroContainer, HeroHeading,
 } from './app.styles';
 import { Drawer, List, Typography } from "@material-ui/core";
 import { RandomDigitor } from './components/RandomDigitor/RandomDigitor';
-import { getAggStats,getPlayers, getCrowdfundingDetails } from './apis';
-
+import { getAggStats, getCrowdfundingDetails } from './apis';
 
 
 const AppComponent: React.StatelessComponent<{}> = (props) => {
@@ -21,17 +20,16 @@ const AppComponent: React.StatelessComponent<{}> = (props) => {
     const classes = useStyles();
 
     const [crowdfundDetails, setCrowdfundDetails] = React.useState({
+        id: null,
         amountRaised: 0,
-        story: {
-            problem: ''
-        }
+        story: null
     });
     React.useEffect(() => {
         (async () => {
             const data = await getCrowdfundingDetails();
             setCrowdfundDetails(data);
         })();
-    });
+    }, [crowdfundDetails.id]);
 
     const [aggData, setAggData] = React.useState<IApp | null>({
         aggPlayers: 0,
@@ -43,10 +41,10 @@ const AppComponent: React.StatelessComponent<{}> = (props) => {
     });
     React.useEffect(() => {
         (async () => {
-            const data = await getAggStats({});
+            const data = await getAggStats(null);
             setAggData(data);
         })();
-    }, []);
+    }, [aggData.aggPlayers]);
 
     const [ isDrawerOpen, setIsDrawerOpen ] = React.useState(false);
 

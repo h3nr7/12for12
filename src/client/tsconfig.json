@@ -19,7 +19,7 @@
     },
     "include": [
         "./**/*.*",
-        "../shared/typings/**/*.d.ts"
+        "../shared/**/*.*"
     ],
     "exclude": [
       "node_modules",

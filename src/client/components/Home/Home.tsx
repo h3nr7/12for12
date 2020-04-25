@@ -9,7 +9,6 @@ import {
 } from './Home.styles';
 import Gallery from 'react-photo-gallery';
 import Carousel, { Modal, ModalGateway } from "react-images";
-import * as IGEmbed from 'react-instagram-embed';
 import { photoSrc } from './photos';
 import { useStyles } from './Home.styles';
 
@@ -68,10 +67,6 @@ const HomeComponent: React.FunctionComponent = () => {
                             onClick={openLightBox}
                             photos={photoSrc}/>
                     </Grid>
-                    {/* <Grid item xs={12} sm={7} md={8}>
-                        <IGEmbed 
-                            url=''/>
-                    </Grid> */}
                 </Grid>
                 <ModalGateway>
                     {isViewOpen ? (
