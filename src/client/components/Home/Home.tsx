@@ -1,21 +1,17 @@
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
-import { Parallax } from 'react-scroll-parallax';
-import { IHome } from './home.interface';
+import { IHome } from './Home.interface';
 import { Grid, Button } from '@material-ui/core';
 import { 
-    RootContainer, HeroContainer, 
-    HeroHeading, JustGivingContainer, 
+    RootContainer, 
+    JustGivingContainer, 
     DataContainer 
-} from './home.styles';
-import { getAggStats,getPlayers, getCrowdfundingDetails } from '../../apis';
+} from './Home.styles';
 import Gallery from 'react-photo-gallery';
 import Carousel, { Modal, ModalGateway } from "react-images";
 import * as IGEmbed from 'react-instagram-embed';
-import { RandomDigitor } from '../RandomDigitor/RandomDigitor';
 import { photoSrc } from './photos';
 import { useStyles } from './Home.styles';
-
 
 const HomeComponent: React.FunctionComponent = () => {
 
@@ -34,74 +30,12 @@ const HomeComponent: React.FunctionComponent = () => {
 
     const classes = useStyles();
 
-    const [aggData, setAggData] = React.useState<IHome | null>({
-        aggPlayers: 0,
-        aggTotDistanceInMeters: 0,
-        aggTotHeightInMeters: 0,
-        aggTotTimeInMinutes: 0,
-        aggTotCaloriesBurnt: 0,
-        foodEarned: []
-    });
-    React.useEffect(() => {
-        (async () => {
-            const data = await getAggStats({});
-            setAggData(data);
-        })();
-    }, []);
-
-    const [players, setPlayers] = React.useState({
-        data: [],
-        pagination: {}
-    });
-    React.useEffect(() => {
-        (async () => {
-            const data = await getPlayers();
-            setPlayers(data);
-        })();
-    }, []);
-
-    const [crowdfundDetails, setCrowdfundDetails] = React.useState({
-        amountRaised: 0,
-        story: {
-            problem: ''
-        }
-    });
-    React.useEffect(() => {
-        (async () => {
-            const data = await getCrowdfundingDetails();
-            setCrowdfundDetails(data);
-        })();
-    });
-
     const onClickHandler = () => {
         window.open('https://www.justgiving.com/crowdfunding/lftc12-for-12-challenge', '_blank');
     }
 
-
     return (
         <RootContainer>
-            <Parallax className={classes.pl1}>
-                <HeroContainer />
-            </Parallax>
-            <Parallax y={[400, 0]} className={classes.pl2}>
-                <HeroHeading>Thanks to your support.  We have raised<br/>
-                    a total of &pound;<RandomDigitor 
-                    value={Number(crowdfundDetails.amountRaised)}
-                    delay={0} 
-                    duration={3000} />, ridden <RandomDigitor 
-                    value={Math.round(aggData.aggTotDistanceInMeters/1000)}
-                    delay={2500} 
-                    duration={3000} />km,<br/>
-                    climbed <RandomDigitor 
-                    value={Math.round(aggData.aggTotHeightInMeters)}
-                    delay={5000} 
-                    duration={3000} />m and burnt <RandomDigitor 
-                    value={Math.round(aggData.aggTotCaloriesBurnt)}
-                    delay={7500} 
-                    duration={3000} /> calories<br/>
-                    to support Masks for NHS Heroes.
-                </HeroHeading>
-            </Parallax>
             <JustGivingContainer>
                 <Grid container spacing={4}>
                     <Grid item xs={12} sm={5} md={4}>
