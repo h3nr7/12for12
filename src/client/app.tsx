@@ -17,6 +17,7 @@ import { getAggStats, getCrowdfundingDetails } from './apis';
 
 const AppComponent: React.StatelessComponent<{}> = (props) => {
 
+
     const classes = useStyles();
 
     const [crowdfundDetails, setCrowdfundDetails] = React.useState({
