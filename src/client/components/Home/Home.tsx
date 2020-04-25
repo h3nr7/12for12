@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
-import { makeStyles } from '@material-ui/core/styles';
 import { Parallax } from 'react-scroll-parallax';
 import { IHome } from './home.interface';
 import { Grid, Button } from '@material-ui/core';
@@ -15,38 +14,8 @@ import Carousel, { Modal, ModalGateway } from "react-images";
 import * as IGEmbed from 'react-instagram-embed';
 import { RandomDigitor } from '../RandomDigitor/RandomDigitor';
 import { photoSrc } from './photos';
-import { callbackify } from 'util';
+import { useStyles } from './Home.styles';
 
-const useStyles = makeStyles((theme) => ({
-    donateBut: {
-        marginTop: 20,
-        width: '60%',
-        marginBottom: 30,
-        background: '#fc035e',
-        [theme.breakpoints.down('xs')]: {
-            margin: '30px 20%'
-        }
-    },
-    pl1: {
-        position: 'relative',
-        top: 0,
-        width: 'auto',
-        [theme.breakpoints.down('xs')]: {
-            height: 600
-        }
-    },
-    pl2: {
-        position: 'absolute',
-        top: 0,
-        left: 30,
-        textAlign: 'left',
-        width: 'auto',
-        [theme.breakpoints.down('xs')]: {
-            top: -100,
-            left: 20,
-        }
-    }
-}));
 
 const HomeComponent: React.FunctionComponent = () => {
 
@@ -112,9 +81,7 @@ const HomeComponent: React.FunctionComponent = () => {
     return (
         <RootContainer>
             <Parallax className={classes.pl1}>
-                <HeroContainer>  
-                    
-                </HeroContainer>
+                <HeroContainer />
             </Parallax>
             <Parallax y={[400, 0]} className={classes.pl2}>
                 <HeroHeading>Thanks to your support.  We have raised<br/>

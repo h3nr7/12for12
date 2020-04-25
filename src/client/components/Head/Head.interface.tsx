@@ -1,5 +1,6 @@
 import * as React from 'react';
 
 export interface IHead {
-    isInvertMenu: boolean
+    isInvertMenu: boolean,
+    onMenuClick(event: any): void
 }

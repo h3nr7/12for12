@@ -1,6 +1,6 @@
-
-
 import styled from 'styled-components';
+import { makeStyles } from '@material-ui/core/styles';
+
 import heroImg from './hero_img.jpg';
 export const RootContainer = styled.div`
     display: block;
@@ -64,3 +64,34 @@ export const DataContainer = styled.section`
     height: 600px;
     overflow: hidden;
 `;
+
+export const useStyles = makeStyles((theme) => ({
+    donateBut: {
+        marginTop: 20,
+        width: '60%',
+        marginBottom: 30,
+        background: '#fc035e',
+        [theme.breakpoints.down('xs')]: {
+            margin: '30px 20%'
+        }
+    },
+    pl1: {
+        position: 'relative',
+        top: 0,
+        width: 'auto',
+        [theme.breakpoints.down('xs')]: {
+            height: 600
+        }
+    },
+    pl2: {
+        position: 'absolute',
+        top: 0,
+        left: 30,
+        textAlign: 'left',
+        width: 'auto',
+        [theme.breakpoints.down('xs')]: {
+            top: -100,
+            left: 20,
+        }
+    }
+}));
