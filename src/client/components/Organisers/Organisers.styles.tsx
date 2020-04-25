@@ -10,5 +10,9 @@ export const useStyles = makeStyles(theme => ({
     ytContainer: {
         maxWidth: 600,
         minHeight: 300    
+    },
+    ytPlayer: {
+        maxWidth: '100%',
+        minHeight: '100%'   
     }
 }));

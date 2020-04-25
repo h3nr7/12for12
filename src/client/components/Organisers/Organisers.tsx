@@ -4,6 +4,7 @@ import { IOrganisers } from './Organisers.interface';
 import { RootContainer } from './Organisers.styles';
 import { Grid } from '@material-ui/core';
 import { useStyles } from './Organisers.styles';
+import Youtube from 'react-youtube';
 
 const OrganisersComp: React.FunctionComponent<IOrganisers> = (props) => {
     
@@ -32,7 +33,9 @@ const OrganisersComp: React.FunctionComponent<IOrganisers> = (props) => {
                     <p><a href="https://www.lftri.co.uk/events/lftc-12-for-12-challenge" target="lftc">https://www.lftri.co.uk/events/lftc-12-for-12-challenge</a></p>
                 </Grid>
                 <Grid item xs={12} sm={12} md={6} lg={5} className={classes.ytContainer}>
-                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/4yKsbx2lTfQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <Youtube
+                        videoId='4yKsbx2lTfQ'
+                        className={classes.ytPlayer}/>
                 </Grid>
             </Grid>            
         </RootContainer>
