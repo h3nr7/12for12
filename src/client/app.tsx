@@ -13,7 +13,7 @@ import { HeroContainer, HeroHeading,
 import { Drawer, List, Typography } from "@material-ui/core";
 import { RandomDigitor } from './components/RandomDigitor/RandomDigitor';
 import { getAggStats, getCrowdfundingDetails } from './apis';
-
+import { animateScroll  } from 'react-scroll';
 
 const AppComponent: React.StatelessComponent<{}> = (props) => {
 
@@ -49,14 +49,30 @@ const AppComponent: React.StatelessComponent<{}> = (props) => {
 
     const [ isDrawerOpen, setIsDrawerOpen ] = React.useState(false);
 
-    const menuClickHandler = (event: any) => {
-        setIsDrawerOpen(!isDrawerOpen);
+    const openDrawerHandler = (event: any) => {
+        setIsDrawerOpen(true);
+        animateScroll.scrollTo(600, {
+            duration: 800,
+            delay: 0,
+            smooth: "easeInOutQuart",
+            // offset: offset
+          });
+    }
+
+    const closeDrawerHandler = (event: any) => {
+        setIsDrawerOpen(false);
+        animateScroll.scrollTo(0, {
+            duration: 800,
+            delay: 0,
+            smooth: "easeInOutQuart",
+            // offset: offset
+          });
     }
 
     return (
         <div className={classes.root}>
             <Drawer 
-                onClose={() => setIsDrawerOpen(false)}
+                onClose={closeDrawerHandler}
                 open={isDrawerOpen}>
                 <List className={classes.menu}>
                     <ListItem variant='h6'>
@@ -75,7 +91,7 @@ const AppComponent: React.StatelessComponent<{}> = (props) => {
                 </List>
             </Drawer>
             <div className={isDrawerOpen ? classes.contentShift : classes.content}>
-                <Head isInvertMenu={true} onMenuClick={menuClickHandler} />
+                <Head isInvertMenu={true} onMenuClick={openDrawerHandler} />
                 <div className={classes.container}>
                     <Parallax className={classes.pl1}>
                         <HeroContainer />
@@ -99,8 +115,8 @@ const AppComponent: React.StatelessComponent<{}> = (props) => {
                             to support Masks for NHS Heroes.
                         </HeroHeading>
                     </Parallax>
-                    { props.children }
                 </div>
+                { props.children }
                 <Foot />
             </div>
         </div>

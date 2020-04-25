@@ -19,7 +19,7 @@ import { foodController } from './food.controller';
  */
 export function registerRoutes(app: express.Application): void {
 
-    app.use(favicon(path.join(__dirname, "..", "..", "..", "public", "favicon.ico")));
+    app.use(favicon(path.join(__dirname, "..", "..", "..", "public", "favicon-32x32.png")));
 
     app.use("/api/users", usersController);
     app.use("/api/events", eventsController);
