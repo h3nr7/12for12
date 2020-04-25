@@ -86,7 +86,7 @@ const ParticipantsComp: React.FunctionComponent = (props => {
     }, [players])
 
     const playerFiltering = (terms:string):IParticipants => {
-        const newData = players.data.filter((p) => 
+        const newData = players.data.filter((p:IParticipant) => 
             p.firstName.toLowerCase().indexOf(terms.toLowerCase()) !== -1);
         return { ...players, data: newData };
     }
@@ -112,7 +112,7 @@ const ParticipantsComp: React.FunctionComponent = (props => {
                     </Typography>
                 </Grid>
                 <Grid xs={12} sm={12} md={6} lg={5} item>
-                {filteredPlayers.data.sort((a, b) => a.firstName.localeCompare(b.firstName)).map((props:IParticipant) => ( 
+                {filteredPlayers.data.sort((a:IParticipant, b:IParticipant) => a.firstName.localeCompare(b.firstName)).map((props:IParticipant) => ( 
                     <PlayerCard className={classes.playerCard} {...props} key={props.lastName}/>
                 ))}
                 </Grid>
