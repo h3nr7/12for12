@@ -85,7 +85,7 @@
     "json-loader": "^0.5.7",
     "jwks-rsa": "^1.8.0",
     "load-json-file": "^6.2.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "memorystore": "^1.6.2",
     "moment": "^2.24.0",
     "mongodb": "^3.5.6",
